@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veneza Motos - Nas Redes Sociais</title>
+    <meta name="description" content="Acompanhe a Veneza Motos nas redes sociais e veja conteúdos exclusivos de motos, ofertas e bastidores.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="container topbar-content">
+            <span class="topbar-info with-icon">
+                <span>Veneza Motos nas redes sociais</span>
+            </span>
+            <a href="index.html" class="topbar-phone">Voltar para o site principal</a>
+        </div>
+    </header>
+
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <div class="logo">
+                <span class="logo-main">Veneza</span>
+                <span class="logo-sub">Motos E Veículos</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html#inicio">Início</a></li>
+                <li><a href="index.html#estoque">Estoque</a></li>
+                <li><a href="index.html#catalogo">Catálogo</a></li>
+                <li><a href="#midias">Mídias sociais</a></li>
+            </ul>
+            <button class="btn-outline theme-toggle" type="button" data-role="theme-toggle">
+                <span id="theme-toggle-label">Modo escuro</span>
+            </button>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero" id="midias">
+            <div class="container hero-content">
+                <div class="hero-text">
+                    <h1 style="color: rgb(0, 102, 255);">Veneza Motos nas redes sociais</h1>
+                    <p>Acompanhe o dia a dia da loja, ofertas relâmpago e conteúdos sobre motos nas nossas mídias sociais.</p>
+                    <ul class="hero-highlights">
+                        <li>Vídeos de motos chegando ao showroom</li>
+                        <li>Dicas rápidas de manutenção e segurança</li>
+                        <li>Ofertas exclusivas para quem segue a loja</li>
+                    </ul>
+                
+                    <div style="margin: 20px 0 12px;">
+              <img src="WhatsApp Image.jpeg"
+       alt="Arte da Veneza Motos nas redes sociais"
+       style="max-width: 100%; border-radius: 16px; box-shadow: 0 12px 30px rgba(15,23,42,0.35);">
+                </div> 
+                </div>
+
+                <div class="hero-image">
+                    <article class="hero-card moto-scroll moto-scroll-left" data-moto-social>
+                        <div class="hero-card-header">
+                            <span class="social-icon social-icon-instagram" aria-hidden="true">IG</span>
+                            <h3>Instagram</h3>
+                        </div>
+                        <p>Stories diários, bastidores das entregas e reels das motos em movimento. Siga <strong>@venezamotos</strong>.</p>
+                    </article>
+                    <article class="hero-card moto-scroll" data-moto-social>
+                        <div class="hero-card-header">
+                            <span class="social-icon social-icon-facebook" aria-hidden="true">FB</span>
+                            <h3>Facebook</h3>
+                        </div>
+                        <p>Álbuns de fotos dos veículos, eventos na loja e transmissões ao vivo com novas oportunidades.</p>
+                    </article>
+                    <article class="hero-card moto-scroll moto-scroll-right" data-moto-social>
+                        <div class="hero-card-header">
+                            <span class="social-icon social-icon-whatsapp" aria-hidden="true">WA</span>
+                            <span class="social-icon social-icon-tiktok" aria-hidden="true">TT</span>
+                            <h3>WhatsApp &amp; TikTok</h3>
+                        </div>
+                        <p>Atendimento rápido pelo WhatsApp e vídeos curtos mostrando o ronco das motos e test rides.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div>
+                <div class="logo">
+                    <span class="logo-main">Veneza</span>
+                    <span class="logo-sub">Motos E Veículos</span>
+                </div>
+                <p>Acompanhe nossas redes sociais e não perca nenhuma novidade.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Redes sociais</h4>
+                <p>Instagram, Facebook, TikTok e YouTube</p>
+            </div>
+            <div class="footer-column">
+                <h4>Site principal</h4>
+                <p><a href="index.html">Voltar para a página inicial</a></p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container footer-bottom-content">
+                <span>&copy; <span id="current-year"></span> Veneza Motos E Veículos.</span>
+                <span class="footer-credits">Página dedicada às mídias sociais.</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const motoElements = document.querySelectorAll("[data-moto-social]");
+            if (!motoElements.length) return;
+
+            motoElements.forEach(function (el) {
+                el.classList.add("moto-scroll");
+            });
+
+            if ("IntersectionObserver" in window) {
+                const observer = new IntersectionObserver(function (entries, obs) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add("moto-in-view");
+                            obs.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.25 });
+
+                motoElements.forEach(function (el) {
+                    observer.observe(el);
+                });
+            } else {
+                motoElements.forEach(function (el) {
+                    el.classList.add("moto-in-view");
+                });
+            }
+        });
+    </script>
+</body>
+</html>
