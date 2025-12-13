@@ -204,8 +204,103 @@ body[data-theme="light"] .theme-toggle-vehicle:hover {
 }
 
 @media (max-width: 480px) {
-.nav-links {
+    .nav-links {
         font-size: 0.85rem;
         gap: 8px 12px;
     }
+}
+
+/* Botão de tela cheia e overlay das fotos */
+.detail-carousel {
+    position: relative;
+}
+
+.vehicle-fs-btn {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #f8fafc;
+    cursor: pointer;
+    z-index: 5;
+    font-weight: 600;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+}
+
+.vehicle-fs-btn:hover,
+.vehicle-fs-btn:focus-visible {
+    background: rgba(37, 99, 235, 0.8);
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-1px);
+}
+
+.vehicle-fs-btn span {
+    font-size: 0.9rem;
+}
+
+.vehicle-fs-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 3000;
+    padding: 16px;
+}
+
+.vehicle-fs-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.vehicle-fs-content {
+    position: relative;
+    max-width: 1200px;
+    width: 100%;
+    max-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vehicle-fs-img {
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: 12px;
+    object-fit: contain;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+    background: #0f172a;
+}
+
+.vehicle-fs-close {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    background: #111827;
+    color: #f8fafc;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.vehicle-fs-close:hover,
+.vehicle-fs-close:focus-visible {
+    background: #1d4ed8;
+    border-color: rgba(255, 255, 255, 0.4);
 }

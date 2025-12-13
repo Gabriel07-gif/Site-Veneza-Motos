@@ -1,4 +1,4 @@
-﻿function scrollToSection(id) {
+function scrollToSection(id) {
     const el = document.getElementById(id);
     if (!el) return;
     const top = el.getBoundingClientRect().top + window.scrollY - 80;
@@ -89,11 +89,6 @@ function formatCpfMask(value) {
     if (digits.length > 9) {
         formatted += "-" + digits.slice(9, 11);
     }
-
-    // Lazy-load para imagens sem atributo definido
-    document.querySelectorAll("img:not([loading])").forEach(img => {
-        img.setAttribute("loading", "lazy");
-    });
     return formatted;
 }
 
@@ -529,152 +524,6 @@ function populateSimulationVehicleOptions() {
         });
 }
 
-function createMotoFilters() {
-    const sidebar = document.querySelector(".catalog-filters");
-    if (!sidebar) return;
-
-    // Categoria "Moto"
-    if (!document.getElementById("filtro-moto")) {
-        const luxoInput = sidebar.querySelector("#filtro-luxo");
-        const luxoGroup = luxoInput ? luxoInput.closest(".filter-group") : null;
-        if (luxoGroup) {
-            const motoGroup = luxoGroup.cloneNode(true);
-            const input = motoGroup.querySelector("input");
-            const label = motoGroup.querySelector("label");
-            if (input && label) {
-                input.id = "filtro-moto";
-                input.name = "filtro-moto";
-                input.checked = false;
-                label.setAttribute("for", "filtro-moto");
-                label.textContent = "Moto";
-            }
-            luxoGroup.insertAdjacentElement("afterend", motoGroup);
-        }
-    }
-
-    // Características de motos
-    if (!document.getElementById("filtro-moto-street")) {
-        const eletricoInput = sidebar.querySelector("#filtro-eletrico");
-        const eletricoGroup = eletricoInput ? eletricoInput.closest(".filter-group") : null;
-        if (!eletricoGroup) return;
-
-        const title = document.createElement("p");
-        title.textContent = "Caracteristicas de motos";
-        eletricoGroup.insertAdjacentElement("afterend", title);
-
-        const createGroup = (id, text) => {
-            const group = document.createElement("div");
-            group.className = "filter-group";
-
-            const input = document.createElement("input");
-            input.type = "checkbox";
-            input.id = id;
-
-            const label = document.createElement("label");
-            label.setAttribute("for", id);
-            label.textContent = text;
-
-            group.appendChild(input);
-            group.appendChild(label);
-            title.insertAdjacentElement("afterend", group);
-            return input;
-        };
-
-        const streetInput = createGroup("filtro-moto-street", "Street");
-        const trailInput = createGroup("filtro-moto-trail", "Trail");
-        const scooterInput = createGroup("filtro-moto-scooter", "Scooter");
-
-        [streetInput, trailInput, scooterInput].forEach((input) => {
-            input.addEventListener("change", filterCatalog);
-        });
-    }
-
-    // Define estilo da moto do catálogo, se ainda não existir
-    const motoCard = document.querySelector('.catalog-card[data-category="moto"]');
-    if (motoCard && !motoCard.dataset.motoStyle) {
-        motoCard.dataset.motoStyle = "street";
-    }
-}
-
-function createExtraCatalogFilters() {
-    const sidebar = document.querySelector(".catalog-filters");
-    if (!sidebar) return;
-
-    // evita duplicar caso ja existam
-    if (document.getElementById("filtro-honda")) return;
-
-    const gasolinaInput = sidebar.querySelector("#filtro-gasolina");
-    const gasolinaGroup = gasolinaInput ? gasolinaInput.closest(".filter-group") : null;
-    if (!gasolinaGroup) return;
-
-    const insertAfter = (ref, node) => {
-        if (ref && ref.parentNode) {
-            ref.parentNode.insertBefore(node, ref.nextSibling);
-        }
-    };
-
-    const createGroup = (id, text) => {
-        const group = document.createElement("div");
-        group.className = "filter-group";
-
-        const input = document.createElement("input");
-        input.type = "checkbox";
-        input.id = id;
-
-        const label = document.createElement("label");
-        label.setAttribute("for", id);
-        label.textContent = text;
-
-        group.appendChild(input);
-        group.appendChild(label);
-        return group;
-    };
-
-    // Marca
-    const marcaTitle = document.createElement("p");
-    marcaTitle.textContent = "Marca";
-    insertAfter(gasolinaGroup, marcaTitle);
-
-    const hondaGroup = createGroup("filtro-honda", "Honda");
-    insertAfter(marcaTitle, hondaGroup);
-    const yamahaGroup = createGroup("filtro-yamaha", "Yamaha");
-    insertAfter(hondaGroup, yamahaGroup);
-
-    // Freios
-    const freioTitle = document.createElement("p");
-    freioTitle.textContent = "Freios";
-    insertAfter(yamahaGroup, freioTitle);
-
-    const absGroup = createGroup("filtro-abs", "ABS");
-    insertAfter(freioTitle, absGroup);
-
-    // Ano
-    const anoTitle = document.createElement("p");
-    anoTitle.textContent = "Ano";
-    insertAfter(absGroup, anoTitle);
-
-    const ate2013 = createGroup("filtro-ano-ate-2013", "Ate 2013");
-    insertAfter(anoTitle, ate2013);
-    const de2014a2016 = createGroup("filtro-ano-2014-2016", "2014 a 2016");
-    insertAfter(ate2013, de2014a2016);
-    const mais2017 = createGroup("filtro-ano-2017-mais", "2017 ou mais");
-    insertAfter(de2014a2016, mais2017);
-
-    [
-        "filtro-honda",
-        "filtro-yamaha",
-        "filtro-abs",
-        "filtro-ano-ate-2013",
-        "filtro-ano-2014-2016",
-        "filtro-ano-2017-mais",
-    ].forEach((id) => {
-        const el = document.getElementById(id);
-        if (el) {
-            el.addEventListener("change", filterCatalog);
-        }
-    });
-}
-
 document.addEventListener("DOMContentLoaded", () => {
     try {
         let savedTheme = null;
@@ -685,7 +534,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         applyTheme(savedTheme === "dark" ? "dark" : "light");
 
-    createMotoFilters();
+    // Define lazy-load para imagens que ainda não possuem atributo
+    document.querySelectorAll("img:not([loading])").forEach((img) => {
+        img.setAttribute("loading", "lazy");
+    });
 
     const toggleBtn = document.querySelector("[data-role='theme-toggle']");
     if (toggleBtn) {
@@ -811,9 +663,6 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Erro ao inicializar os scripts da pagina:", error);
     }
 });
-
-
-
 
 
 
