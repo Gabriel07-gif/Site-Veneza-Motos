@@ -648,7 +648,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (aboutList) {
         const li = document.createElement("li");
         li.textContent =
-            "Acompanhamento desde a escolha do veiculo ate a entrega, com explicacao de taxas, documentacao e garantias.";
+            "Acompanhamento desde a escolha do veículo até a entrega, com explicação de taxas, documentação e garantias.";
         aboutList.appendChild(li);
     }
 
@@ -656,11 +656,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (contactHeader) {
         const extra = document.createElement("p");
         extra.textContent =
-            "Envie tambem sua renda aproximada e se possui veiculo na troca para receber uma simulacao mais precisa.";
+            "Envie também sua renda aproximada e se possui veículo na troca para receber uma simulação mais precisa.";
         contactHeader.appendChild(extra);
     }
     } catch (error) {
-        console.error("Erro ao inicializar os scripts da pagina:", error);
+        console.error("Erro ao inicializar os scripts da página:", error);
     }
 });
 
