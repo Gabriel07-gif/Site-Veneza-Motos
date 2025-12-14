@@ -1,0 +1,20 @@
+{
+  "name": "Veneza Motos e Veiculos",
+  "short_name": "Veneza",
+  "description": "Veneza Motos e Veiculos",
+  "icons": [
+    {
+      "src": "android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#0b2b6f",
+  "background_color": "#0b2b6f",
+  "display": "standalone"
+}
