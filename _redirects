@@ -1,0 +1,5 @@
+# Força o domínio sem www -> com www
+https://venezamotoseveiculos.com.br/* https://www.venezamotoseveiculos.com.br/:splat 301!
+
+# Home /index.html -> /
+/index.html / 301!
