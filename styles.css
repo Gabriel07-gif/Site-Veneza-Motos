@@ -690,6 +690,12 @@ button {
     font-size: 0.88rem;
 }
 
+.vehicle-details span + span::before {
+    content: "\2022";
+    margin: 0 6px;
+    color: var(--muted);
+}
+
 .vehicle-price {
     margin: 8px 0 0;
     font-weight: 700;
