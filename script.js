@@ -46,7 +46,152 @@ function applyVehicleImages() {
     });
 }
 
-// Adiciona <img> real com alt/ lazy nas capas do catálogo para acessibilidade e SEO
+function initVehicleImagePreview() {
+    const imageEls = document.querySelectorAll("#estoque .vehicle-image");
+    if (!imageEls.length) return;
+
+    const overlay = document.createElement("div");
+    overlay.className = "vehicle-preview-overlay";
+    overlay.setAttribute("aria-hidden", "true");
+    overlay.innerHTML = `
+        <div class="vehicle-preview-content" role="dialog" aria-modal="true" aria-label="Foto do veiculo">
+            <button type="button" class="vehicle-preview-close" aria-label="Fechar foto">
+                <i data-feather="x"></i>
+            </button>
+            <button type="button" class="vehicle-preview-nav vehicle-preview-prev" aria-label="Foto anterior">
+                <i data-feather="chevron-left"></i>
+            </button>
+            <img class="vehicle-preview-img" alt="Foto do veiculo" />
+            <button type="button" class="vehicle-preview-nav vehicle-preview-next" aria-label="Proxima foto">
+                <i data-feather="chevron-right"></i>
+            </button>
+            <div class="vehicle-preview-count" aria-live="polite"></div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+
+    const overlayImg = overlay.querySelector(".vehicle-preview-img");
+    const closeBtn = overlay.querySelector(".vehicle-preview-close");
+    const prevBtn = overlay.querySelector(".vehicle-preview-prev");
+    const nextBtn = overlay.querySelector(".vehicle-preview-next");
+    const countEl = overlay.querySelector(".vehicle-preview-count");
+    const defaultAlt = "Foto do veiculo";
+    let currentImages = [];
+    let currentIndex = 0;
+
+    const parseSources = (value) =>
+        (value || "")
+            .split(/[,;|]/)
+            .map((item) => item.trim())
+            .filter(Boolean);
+
+    const buildImageList = (sources, title) => {
+        const baseAlt = title ? `Foto de ${title}` : defaultAlt;
+        return sources.map((src, index) => ({
+            src,
+            alt: sources.length > 1 ? `${baseAlt} - ${index + 1}` : baseAlt,
+        }));
+    };
+
+    const updateNav = () => {
+        const hasMany = currentImages.length > 1;
+        prevBtn.style.display = hasMany ? "inline-flex" : "none";
+        nextBtn.style.display = hasMany ? "inline-flex" : "none";
+        countEl.textContent = hasMany ? `${currentIndex + 1} / ${currentImages.length}` : "";
+    };
+
+    const showImageAt = (index) => {
+        if (!currentImages.length) return;
+        const total = currentImages.length;
+        currentIndex = ((index % total) + total) % total;
+        const { src, alt } = currentImages[currentIndex];
+        overlayImg.src = src;
+        overlayImg.alt = alt || defaultAlt;
+        updateNav();
+    };
+
+    const exitFullscreen = () => {
+        if (document.fullscreenElement && document.exitFullscreen) {
+            document.exitFullscreen().catch(() => {});
+        }
+    };
+
+    const closeOverlay = () => {
+        overlay.classList.remove("open");
+        overlay.setAttribute("aria-hidden", "true");
+        currentImages = [];
+        currentIndex = 0;
+        exitFullscreen();
+    };
+
+    const openOverlay = (images, startIndex = 0) => {
+        if (!images.length) return;
+        currentImages = images;
+        showImageAt(startIndex);
+        overlay.classList.add("open");
+        overlay.setAttribute("aria-hidden", "false");
+        if (overlay.requestFullscreen) {
+            overlay.requestFullscreen().catch(() => {});
+        }
+    };
+
+    overlay.addEventListener("click", (event) => {
+        if (event.target === overlay) closeOverlay();
+    });
+
+    closeBtn.addEventListener("click", closeOverlay);
+    prevBtn.addEventListener("click", () => showImageAt(currentIndex - 1));
+    nextBtn.addEventListener("click", () => showImageAt(currentIndex + 1));
+
+    document.addEventListener("keydown", (event) => {
+        if (!overlay.classList.contains("open")) return;
+        if (event.key === "Escape") closeOverlay();
+        if (event.key === "ArrowLeft") {
+            event.preventDefault();
+            showImageAt(currentIndex - 1);
+        }
+        if (event.key === "ArrowRight") {
+            event.preventDefault();
+            showImageAt(currentIndex + 1);
+        }
+    });
+
+    imageEls.forEach((imgEl) => {
+        const card = imgEl.closest(".vehicle-card");
+        const title = card?.querySelector("h3")?.textContent?.trim() || "";
+        const label = title ? `Ver fotos de ${title}` : "Ver fotos do veiculo";
+        imgEl.setAttribute("role", "button");
+        imgEl.setAttribute("tabindex", "0");
+        imgEl.setAttribute("aria-label", label);
+
+        const getSources = () => {
+            const raw = imgEl.dataset.images || card?.dataset.images || "";
+            let sources = parseSources(raw);
+            if (!sources.length) {
+                const single = imgEl.dataset.image || card?.dataset.image || "";
+                if (single) sources = [single];
+            }
+            return sources;
+        };
+
+        const openFromEl = () => {
+            const sources = getSources();
+            if (!sources.length) return;
+            const images = buildImageList(sources, title);
+            openOverlay(images, 0);
+        };
+
+        imgEl.addEventListener("click", openFromEl);
+        imgEl.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                openFromEl();
+            }
+        });
+    });
+}
+
+// Adiciona <img> real com alt/ lazy nas capas do catalogo para acessibilidade e SEO
 function enhanceCatalogImages() {
     document.querySelectorAll(".catalog-card-image").forEach((wrapper) => {
         if (wrapper.querySelector("img")) return;
@@ -619,6 +764,7 @@ document.addEventListener("DOMContentLoaded", () => {
         yearEl.textContent = new Date().getFullYear();
     }
     applyVehicleImages();
+    initVehicleImagePreview();
     enhanceCatalogImages();
     populateSimulationVehicleOptions();
     initSimulationFormConstraints();
@@ -663,6 +809,9 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Erro ao inicializar os scripts da página:", error);
     }
 });
+
+
+
 
 
 

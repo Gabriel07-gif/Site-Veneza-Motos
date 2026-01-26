@@ -488,7 +488,7 @@ button {
 }
 
 .catalog-card-image {
-    height: 170px;
+    height: clamp(190px, 22vw, 240px);
     background-size: cover;
     background-position: center;
     position: relative;
@@ -620,11 +620,17 @@ button {
 }
 
 .vehicle-image {
-    height: 220px;
+    height: clamp(220px, 24vw, 280px);
     background-size: cover;
     background-position: center;
     position: relative;
     display: block;
+    cursor: pointer;
+}
+
+.vehicle-image:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.65);
+    outline-offset: -3px;
 }
 
 .vehicle-image-car-1 {
@@ -649,6 +655,128 @@ button {
 
 .vehicle-image-moto-3 {
     background-image: linear-gradient(135deg, #020617, #1e3a8a);
+}
+
+.vehicle-preview-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 3000;
+    padding: 16px;
+}
+
+.vehicle-preview-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.vehicle-preview-content {
+    position: relative;
+    max-width: 1200px;
+    width: 100%;
+    max-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vehicle-preview-img {
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: 12px;
+    object-fit: contain;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+    background: #0f172a;
+}
+
+.vehicle-preview-close {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    background: #111827;
+    color: #f8fafc;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.vehicle-preview-close:hover,
+.vehicle-preview-close:focus-visible {
+    background: #1d4ed8;
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.vehicle-preview-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #f8fafc;
+    width: 48px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+}
+
+.vehicle-preview-nav:hover,
+.vehicle-preview-nav:focus-visible {
+    background: rgba(37, 99, 235, 0.8);
+    border-color: rgba(255, 255, 255, 0.7);
+    transform: translateY(-50%) scale(1.02);
+}
+
+.vehicle-preview-prev {
+    left: 12px;
+}
+
+.vehicle-preview-next {
+    right: 12px;
+}
+
+.vehicle-preview-count {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #e5e7eb;
+    font-size: 0.9rem;
+    background: rgba(15, 23, 42, 0.6);
+    padding: 4px 10px;
+    border-radius: 999px;
+}
+
+@media (max-width: 640px) {
+    .vehicle-preview-nav {
+        width: 42px;
+        height: 42px;
+    }
+    .vehicle-preview-prev {
+        left: 6px;
+    }
+    .vehicle-preview-next {
+        right: 6px;
+    }
+    .vehicle-preview-count {
+        font-size: 0.82rem;
+    }
 }
 
 .moto-scroll {
@@ -1164,9 +1292,11 @@ body[data-theme="dark"] .btn-secondary:hover {
     .hero-text h1 {
         font-size: 2rem;
     }
-    .catalog-card-image,
+    .catalog-card-image {
+        height: clamp(180px, 48vw, 220px);
+    }
     .vehicle-image {
-        height: 150px;
+        height: clamp(200px, 54vw, 240px);
     }
     .catalog-layout {
         grid-template-columns: 1fr;
