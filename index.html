@@ -55,8 +55,32 @@
 </script>
 
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="intro.css">
 </head>
 <body>
+
+    <!-- ===== INTRO SPLASH / ANTIGRAVITY ===== -->
+    <div id="intro-overlay" role="dialog" aria-modal="true" aria-label="Tela de entrada Veneza Motos">
+        <div id="intro-bg"></div>
+        <canvas id="intro-canvas"></canvas>
+
+        <div id="intro-content">
+            <div id="intro-brand">
+                <span class="brand-name">Veneza</span>
+                <span class="brand-sub">Motos &amp; Veículos</span>
+            </div>
+            <div id="intro-line"></div>
+            <p id="intro-tagline">Compra · Venda · Troca · Financiamento</p>
+        </div>
+
+        <button id="intro-skip" type="button">Pular intro</button>
+
+        <div id="intro-progress-wrap">
+            <div id="intro-progress"></div>
+        </div>
+    </div>
+    <!-- ===== /INTRO ===== -->
+
     <nav class="navbar">
         <div class="container navbar-content">
             <div class="logo">
@@ -777,6 +801,7 @@
     </div>
 <script src="https://unpkg.com/feather-icons@4.29.2/dist/feather.min.js" crossorigin="anonymous"></script>
 <script src="script.js"></script>
+<script src="intro.js"></script>
 </body>
 </html>
 
