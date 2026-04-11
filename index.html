@@ -97,13 +97,49 @@
                 <li><a href="#contato">Contato</a></li>
             </ul>
             <button class="btn-outline theme-toggle" type="button" data-role="theme-toggle">
-                <span id="theme-toggle-label">Modo escuro</span>
+                <span id="theme-toggle-label" class="theme-label">Modo escuro</span>
             </button>
             <a class="btn-primary btn-whatsapp" href="https://wa.me/5585986114901?text=Ol%C3%A1%2C+tenho+interesse+em+um+ve%C3%ADculo+da+Veneza+Motos+e+Ve%C3%ADculos." target="_blank" rel="noopener noreferrer">
                 Falar no WhatsApp
             </a>
+            <button class="hamburger" id="nav-hamburger" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Abrir menu de navegação">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
+
+    <!-- ===== Mobile Navigation Drawer ===== -->
+    <div class="mobile-nav" id="mobile-nav" aria-hidden="true">
+        <div class="mobile-nav-header">
+            <div class="logo">
+                <span class="logo-main">Veneza</span>
+                <span class="logo-sub">Motos E Veículos</span>
+            </div>
+            <button class="mobile-nav-close" id="mobile-nav-close" type="button" aria-label="Fechar menu">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <ul class="mobile-nav-links">
+            <li><a href="#inicio">Início</a></li>
+            <li><a href="#estoque">Estoque</a></li>
+            <li><a href="#catalogo">Catálogo</a></li>
+            <li><a href="#servicos">Serviços</a></li>
+            <li><a href="#sobre">Sobre</a></li>
+            <li><a href="midias-sociais.html">Redes sociais</a></li>
+            <li><a href="#contato">Contato</a></li>
+        </ul>
+        <div class="mobile-nav-footer">
+            <button class="btn-outline" type="button" data-role="theme-toggle">
+                <span class="theme-label">Modo escuro</span>
+            </button>
+            <a class="btn-primary" href="https://wa.me/5585986114901?text=Ol%C3%A1%2C+tenho+interesse+em+um+ve%C3%ADculo+da+Veneza+Motos+e+Ve%C3%ADculos." target="_blank" rel="noopener noreferrer">
+                WhatsApp
+            </a>
+        </div>
+    </div>
+    <div class="mobile-nav-backdrop" id="mobile-nav-backdrop"></div>
 
     <main>
         <section id="inicio" class="hero">
@@ -134,10 +170,41 @@
             </div>
         </section>
 
+        <!-- ===== STATS BAR ===== -->
+        <div class="stats-bar" role="region" aria-label="Números da Veneza Motos">
+            <div class="container stats-inner">
+                <div class="stat-item">
+                    <strong class="stat-number" data-target="1000" data-suffix="+">1000+</strong>
+                    <span class="stat-label">Veículos vendidos</span>
+                </div>
+                <div class="stat-divider" aria-hidden="true"></div>
+                <div class="stat-item">
+                    <strong class="stat-number" data-target="10" data-suffix=" anos">10 anos</strong>
+                    <span class="stat-label">No mercado automotivo</span>
+                </div>
+                <div class="stat-divider" aria-hidden="true"></div>
+                <div class="stat-item">
+                    <strong class="stat-number" data-target="3" data-suffix=" meses">3 meses</strong>
+                    <span class="stat-label">Garantia motor e câmbio</span>
+                </div>
+                <div class="stat-divider" aria-hidden="true"></div>
+                <div class="stat-item">
+                    <strong class="stat-number" data-target="48" data-suffix="x">48x</strong>
+                    <span class="stat-label">No financiamento</span>
+                </div>
+            </div>
+        </div>
+        <!-- ===== /STATS BAR ===== -->
+
         <section id="catalogo" class="section catalog-section">
             <div class="container">
+                <button class="filter-toggle-btn" id="filter-toggle-btn" type="button" aria-expanded="false" aria-controls="catalog-filters-panel">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+                    Filtrar veículos
+                    <span class="filter-count-badge" id="filter-count-badge"></span>
+                </button>
                 <div class="catalog-layout">
-                    <aside class="catalog-filters">
+                    <aside class="catalog-filters" id="catalog-filters-panel">
                         <h3>Filtrar veículos</h3>
                      <p>Categoria</p>
     <div class="filter-group">
@@ -210,7 +277,7 @@
 
                     <div>
                         <div class="catalog-main-header">
-                            <h1>Catálogo completo</h1>
+                            <h2>Catálogo completo</h2>
                             <select class="catalog-sort">
                                 <option>Mais recentes</option>
                                 <option>Menor preço</option>
@@ -336,6 +403,18 @@
                                         <span>MANUAL</span>
                                     </p>
                                     <p class="catalog-price">R$ 8.900</p>
+                                    <span class="catalog-tag">Disponível</span>
+                                </div>
+                                </a>
+
+                                  <a href="cg-fan-125-2016.html" class="catalog-card" data-category="moto" data-gasolina="gasolina" data-partida="pedal" data-transmission="manual" data-brand="honda" data-year="2016/2016" data-price="9900">                                <div class="catalog-card-image" style="background-image: linear-gradient(135deg,#020617,#1d4ed8); background-image: url('Imagens otimizadas/Imagens motos/314.jpg');"></div>                                <div class="catalog-card-body">                                    <h3>HONDA CG 125i FAN KS</h3>
+                                    <p class="catalog-meta">
+                                        <span>2016/2016</span>
+                                        <span>KS</span>
+                                        <span>PARTIDA PEDAL</span>
+                                        <span>MANUAL</span>
+                                    </p>
+                                    <p class="catalog-price">R$ 9.900</p>
                                     <span class="catalog-tag">Disponível</span>
                                 </div>
                                 </a>
@@ -824,6 +903,36 @@
             <button class="btn-primary btn-full" type="button" id="modal-go-contact">Ir para contato</button>
         </div>
     </div>
+<!-- Mobile Sticky CTA Bar -->
+<div class="mobile-cta-bar" role="navigation" aria-label="Contato rápido">
+    <a href="tel:+5585986114901" class="mobile-cta-btn mobile-cta-phone">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 010 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        <span>Ligar agora</span>
+    </a>
+    <a href="https://wa.me/5585986114901?text=Ol%C3%A1%2C+tenho+interesse+em+um+ve%C3%ADculo+da+Veneza+Motos+e+Ve%C3%ADculos." class="mobile-cta-btn mobile-cta-whatsapp" target="_blank" rel="noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        <span>WhatsApp</span>
+    </a>
+</div>
+
+<!-- Floating WhatsApp Button -->
+<a href="https://wa.me/5585986114901?text=Ol%C3%A1%2C+tenho+interesse+em+um+ve%C3%ADculo+da+Veneza+Motos+e+Ve%C3%ADculos."
+   class="fab-whatsapp"
+   target="_blank"
+   rel="noopener noreferrer"
+   aria-label="Falar no WhatsApp">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+</a>
+
+<!-- Scroll to Top Button -->
+<button class="scroll-top" id="scroll-top" type="button" aria-label="Voltar ao topo">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+</button>
+
 <script src="https://unpkg.com/feather-icons@4.29.2/dist/feather.min.js" crossorigin="anonymous"></script>
 <script src="script.js"></script>
 <script src="intro.js"></script>
