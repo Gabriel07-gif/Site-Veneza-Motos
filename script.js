@@ -1,3 +1,118 @@
+/* ===== Contador animado (Stats Bar) ===== */
+function animateCounters() {
+    const counters = document.querySelectorAll(".stat-number[data-target]");
+    if (!counters.length) return;
+
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting || entry.target.dataset.counted) return;
+                entry.target.dataset.counted = "true";
+
+                const target = parseInt(entry.target.dataset.target, 10);
+                const suffix = entry.target.dataset.suffix || "";
+                const duration = 1600;
+                const startTime = performance.now();
+
+                const update = (now) => {
+                    const elapsed = now - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const ease = 1 - Math.pow(1 - progress, 3);
+                    const current = Math.round(target * ease);
+                    entry.target.textContent = current.toLocaleString("pt-BR") + suffix;
+                    if (progress < 1) requestAnimationFrame(update);
+                };
+                requestAnimationFrame(update);
+            });
+        },
+        { threshold: 0.35 }
+    );
+
+    counters.forEach((el) => observer.observe(el));
+}
+
+/* ===== Scroll Reveal ===== */
+function initScrollReveal() {
+    const targets = document.querySelectorAll(
+        ".service-card, .vehicle-card, .about-highlights > div, .stat-item, .about-box, .contact-form, .contact-info"
+    );
+
+    targets.forEach((el, i) => {
+        if (!el.classList.contains("reveal")) {
+            el.classList.add("reveal");
+            const delay = (i % 4) * 0.08;
+            if (delay > 0) el.style.transitionDelay = delay + "s";
+        }
+    });
+
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("revealed");
+                    observer.unobserve(entry.target);
+                }
+            });
+        },
+        { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
+    );
+
+    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+}
+
+/* ===== Mobile Filter Toggle ===== */
+function initFilterToggle() {
+    const toggleBtn = document.getElementById("filter-toggle-btn");
+    const filterPanel = document.getElementById("catalog-filters-panel");
+    const countBadge = document.getElementById("filter-count-badge");
+    if (!toggleBtn || !filterPanel) return;
+
+    const isSmall = () => window.innerWidth <= 900;
+
+    const updateBadge = () => {
+        if (!countBadge) return;
+        const checked = filterPanel.querySelectorAll("input[type='checkbox']:checked").length;
+        if (checked > 0) {
+            countBadge.textContent = checked;
+            countBadge.classList.add("visible");
+        } else {
+            countBadge.classList.remove("visible");
+        }
+    };
+
+    const setCollapsed = (collapsed) => {
+        if (collapsed) {
+            filterPanel.classList.add("collapsed");
+            toggleBtn.setAttribute("aria-expanded", "false");
+        } else {
+            filterPanel.classList.remove("collapsed");
+            toggleBtn.setAttribute("aria-expanded", "true");
+        }
+    };
+
+    // Começa fechado em mobile
+    if (isSmall()) setCollapsed(true);
+
+    toggleBtn.addEventListener("click", () => {
+        const isCollapsed = filterPanel.classList.contains("collapsed");
+        setCollapsed(!isCollapsed);
+    });
+
+    // Atualiza badge ao alterar filtros
+    filterPanel.querySelectorAll("input[type='checkbox']").forEach((cb) => {
+        cb.addEventListener("change", updateBadge);
+    });
+
+    // Ao girar/redimensionar, abre em desktop
+    window.addEventListener(
+        "resize",
+        () => {
+            if (!isSmall()) setCollapsed(false);
+        },
+        { passive: true }
+    );
+}
+
 function scrollToSection(id) {
     const el = document.getElementById(id);
     if (!el) return;
@@ -492,10 +607,10 @@ function applyTheme(theme) {
     const body = document.body;
     if (!body) return;
     body.setAttribute("data-theme", theme);
-    const label = document.getElementById("theme-toggle-label");
-    if (label) {
-        label.textContent = theme === "dark" ? "Modo claro" : "Modo escuro";
-    }
+    const labelText = theme === "dark" ? "Modo claro" : "Modo escuro";
+    document.querySelectorAll(".theme-label").forEach((el) => {
+        el.textContent = labelText;
+    });
 }
 
 function toggleTheme() {
@@ -684,10 +799,9 @@ document.addEventListener("DOMContentLoaded", () => {
         img.setAttribute("loading", "lazy");
     });
 
-    const toggleBtn = document.querySelector("[data-role='theme-toggle']");
-    if (toggleBtn) {
-        toggleBtn.addEventListener("click", toggleTheme);
-    }
+    document.querySelectorAll("[data-role='theme-toggle']").forEach((btn) => {
+        btn.addEventListener("click", toggleTheme);
+    });
 
     document.querySelectorAll("[data-scroll-target]").forEach((el) => {
         el.addEventListener("click", (event) => {
@@ -767,6 +881,9 @@ document.addEventListener("DOMContentLoaded", () => {
     initVehicleImagePreview();
     enhanceCatalogImages();
     populateSimulationVehicleOptions();
+    animateCounters();
+    initScrollReveal();
+    initFilterToggle();
     initSimulationFormConstraints();
     initContactFormConstraints();
     const simForm = document.getElementById("form-simulacao");
@@ -784,6 +901,60 @@ document.addEventListener("DOMContentLoaded", () => {
     filterCatalog();
     filterVehicles("all");
     filterCatalog();
+
+    // ===== Mobile Navigation Drawer =====
+    const navHamburger = document.getElementById("nav-hamburger");
+    const mobileNavEl = document.getElementById("mobile-nav");
+    const mobileNavBackdropEl = document.getElementById("mobile-nav-backdrop");
+    const mobileNavCloseEl = document.getElementById("mobile-nav-close");
+
+    const openMobileNav = () => {
+        if (!mobileNavEl) return;
+        mobileNavEl.classList.add("open");
+        mobileNavEl.setAttribute("aria-hidden", "false");
+        mobileNavBackdropEl?.classList.add("visible");
+        navHamburger?.setAttribute("aria-expanded", "true");
+        document.body.style.overflow = "hidden";
+    };
+
+    const closeMobileNav = () => {
+        if (!mobileNavEl) return;
+        mobileNavEl.classList.remove("open");
+        mobileNavEl.setAttribute("aria-hidden", "true");
+        mobileNavBackdropEl?.classList.remove("visible");
+        navHamburger?.setAttribute("aria-expanded", "false");
+        document.body.style.overflow = "";
+    };
+
+    if (navHamburger) navHamburger.addEventListener("click", openMobileNav);
+    if (mobileNavCloseEl) mobileNavCloseEl.addEventListener("click", closeMobileNav);
+    if (mobileNavBackdropEl) mobileNavBackdropEl.addEventListener("click", closeMobileNav);
+
+    document.querySelectorAll(".mobile-nav-links a").forEach((link) => {
+        link.addEventListener("click", closeMobileNav);
+    });
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && mobileNavEl?.classList.contains("open")) {
+            closeMobileNav();
+        }
+    });
+
+    // ===== Scroll to Top Button =====
+    const scrollTopBtn = document.getElementById("scroll-top");
+    if (scrollTopBtn) {
+        const toggleScrollTopVisibility = () => {
+            if (window.scrollY > 450) {
+                scrollTopBtn.classList.add("visible");
+            } else {
+                scrollTopBtn.classList.remove("visible");
+            }
+        };
+        window.addEventListener("scroll", toggleScrollTopVisibility, { passive: true });
+        scrollTopBtn.addEventListener("click", () => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+    }
 
     if (window.feather && typeof window.feather.replace === "function") {
         window.feather.replace();

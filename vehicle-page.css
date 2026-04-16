@@ -1,0 +1,301 @@
+/* ============================================
+   Vehicle Detail Page — Veneza Motos e Veículos
+   ============================================ */
+
+/* ===== Base ===== */
+body {
+  background: linear-gradient(160deg, #020617 0%, #0b1120 50%, #000000 100%);
+  color: #ffffff;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  padding-bottom: 0;
+}
+
+/* ===== Carousel ===== */
+.detail-carousel {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+}
+
+.detail-carousel img {
+  height: clamp(300px, 40vw, 560px);
+  object-fit: cover;
+  width: 100%;
+  display: block;
+  border-radius: 0;
+}
+
+/* Subtle bottom gradient on carousel */
+.detail-carousel .carousel-inner {
+  position: relative;
+}
+
+.detail-carousel .carousel-inner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(2, 6, 23, 0.4) 0%, transparent 45%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ===== Detail Card ===== */
+.detail-card {
+  background: #ffffff;
+  color: #0f172a;
+  padding: 28px 24px;
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  height: fit-content;
+}
+
+.detail-card h2 {
+  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: #0f172a;
+  margin-bottom: 2px;
+}
+
+.detail-card .text-dark.fs-4 {
+  color: #1d4ed8 !important;
+  font-size: clamp(1.45rem, 3.2vw, 1.95rem) !important;
+  font-weight: 700 !important;
+  margin-bottom: 4px;
+}
+
+/* Available badge */
+.detail-card::before {
+  display: none;
+}
+
+/* Table */
+.detail-card .table {
+  font-size: 0.92rem;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.detail-card .table th {
+  font-weight: 600;
+  color: #374151;
+  vertical-align: middle;
+  white-space: nowrap;
+  padding: 9px 12px;
+}
+
+.detail-card .table td {
+  font-weight: 500;
+  color: #1f2937;
+  padding: 9px 12px;
+  vertical-align: middle;
+}
+
+.detail-card .table-striped > tbody > tr:nth-of-type(odd) > * {
+  background-color: rgba(241, 245, 249, 0.85);
+}
+
+/* ===== CTA Buttons in detail card ===== */
+.detail-card .btn-success {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #16a34a, #15803d) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 13px 20px !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  box-shadow: 0 4px 16px rgba(22, 163, 74, 0.3) !important;
+  transition: all 0.2s ease !important;
+  width: 100%;
+  margin-left: 0 !important;
+  margin-top: 16px !important;
+  text-decoration: none;
+}
+
+.detail-card .btn-success:hover {
+  background: linear-gradient(135deg, #15803d, #166534) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(22, 163, 74, 0.4) !important;
+  color: #ffffff !important;
+}
+
+.detail-card .btn-test-drive {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: transparent !important;
+  color: #1d4ed8 !important;
+  border: 2px solid #1d4ed8 !important;
+  border-radius: 10px !important;
+  padding: 11px 20px !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  transition: all 0.2s ease !important;
+  width: 100%;
+  margin-left: 0 !important;
+  margin-top: 10px !important;
+  text-decoration: none;
+}
+
+.detail-card .btn-test-drive:hover {
+  background: #1d4ed8 !important;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(29, 78, 216, 0.3) !important;
+}
+
+.detail-card .btn-test-drive i {
+  color: #1d4ed8 !important;
+}
+
+.detail-card .btn-test-drive:hover i {
+  color: #ffffff !important;
+}
+
+/* ===== Footer ===== */
+.site-footer {
+  text-align: center;
+  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.9);
+  padding: 16px;
+  border-top: 2px solid #1d4ed8;
+  width: 100%;
+  font-size: 0.9rem;
+  margin-top: 40px;
+}
+
+/* ===== Mobile Sticky CTA Bar ===== */
+.vehicle-mobile-cta {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  padding: 10px 14px;
+  background: rgba(2, 6, 23, 0.97);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 10px;
+}
+
+.vehicle-mobile-cta .mob-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 12px 10px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.vehicle-mobile-cta .mob-btn-call {
+  background: transparent;
+  color: #ffffff;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+}
+
+.vehicle-mobile-cta .mob-btn-call:hover,
+.vehicle-mobile-cta .mob-btn-call:active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.vehicle-mobile-cta .mob-btn-wa {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+  color: #ffffff;
+}
+
+.vehicle-mobile-cta .mob-btn-wa:hover,
+.vehicle-mobile-cta .mob-btn-wa:active {
+  background: linear-gradient(135deg, #15803d, #166534);
+  color: #ffffff;
+}
+
+/* ===== Light Theme ===== */
+body[data-theme="light"] {
+  background: linear-gradient(160deg, #f1f5f9 0%, #e2e8f0 60%, #f8fafc 100%);
+  color: #0f172a;
+}
+
+body[data-theme="light"] .detail-card {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+}
+
+body[data-theme="light"] .detail-card h2 {
+  color: #0f172a;
+}
+
+body[data-theme="light"] .detail-card table,
+body[data-theme="light"] .detail-card th,
+body[data-theme="light"] .detail-card td {
+  color: #0f172a;
+}
+
+body[data-theme="light"] .site-footer {
+  background: #0f172a;
+  color: #e5e7eb;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 767px) {
+  body {
+    padding-bottom: 76px;
+  }
+
+  .detail-carousel img {
+    height: clamp(240px, 64vw, 400px);
+  }
+
+  .vehicle-mobile-cta {
+    display: flex;
+  }
+
+  /* Hide inline CTA buttons on mobile — handled by the bottom bar */
+  .detail-card .btn-success,
+  .detail-card .btn-test-drive {
+    display: none !important;
+  }
+
+  .detail-card {
+    padding: 20px 16px;
+  }
+
+  .detail-card h2 {
+    font-size: 1.25rem;
+  }
+
+  .site-footer {
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .detail-carousel img {
+    height: clamp(200px, 68vw, 340px);
+  }
+
+  .vehicle-mobile-cta .mob-btn {
+    font-size: 0.83rem;
+    padding: 11px 8px;
+  }
+}
