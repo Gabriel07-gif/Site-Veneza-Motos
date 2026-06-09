@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git rm *)",
+      "Bash(git add *)",
+      "Bash(git fsck *)",
+      "Bash(cp \"index.html\" \"/tmp/index_backup.html\" && echo \"Backup feito\")",
+      "Bash(rm .git/index)",
+      "Bash(git reset *)",
+      "Bash(git fetch *)",
+      "Bash(git read-tree *)",
+      "Bash(git clone *)"
+    ],
+    "additionalDirectories": [
+      "\\tmp"
+    ]
+  }
+}
