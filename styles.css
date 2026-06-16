@@ -1371,6 +1371,12 @@ body[data-theme="light"] .clients-list li {
     color: #000000;
 }
 
+/* ===== Dark mode: topbar ===== */
+body[data-theme="dark"] .topbar {
+    background: #000c1a;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
 body[data-theme="dark"] .catalog-filters p,
 body[data-theme="dark"] .catalog-filters label {
     color: #e5e7eb;
@@ -2190,3 +2196,449 @@ body[data-theme="dark"] .filter-toggle-btn:hover {
     color: #fff;
     border-color: var(--primary);
 }
+
+/* ===========================================
+   TOPBAR SEPARADOR
+   =========================================== */
+.topbar-sep {
+    display: inline-block;
+    width: 1px;
+    height: 13px;
+    background: rgba(255,255,255,0.22);
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+/* ===========================================
+   HERO BADGE / STATUS
+   =========================================== */
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: linear-gradient(135deg, rgba(37,99,235,0.1), rgba(37,99,235,0.04));
+    border: 1.5px solid rgba(37,99,235,0.28);
+    border-radius: 999px;
+    padding: 5px 14px 5px 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--primary);
+    margin-bottom: 16px;
+}
+
+.hero-badge-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    flex-shrink: 0;
+    animation: heroDotPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes heroDotPulse {
+    0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+    50% { opacity: 0.6; transform: scale(0.8); box-shadow: 0 0 0 5px rgba(34,197,94,0); }
+}
+
+body[data-theme="dark"] .hero-badge {
+    background: rgba(37,99,235,0.12);
+    border-color: rgba(37,99,235,0.35);
+    color: #93c5fd;
+}
+
+/* ===========================================
+   BRANDS STRIP
+   =========================================== */
+.brands-strip {
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 0;
+}
+
+.brands-strip-inner {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.brands-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    flex-shrink: 0;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.brands-divider {
+    width: 1px;
+    height: 28px;
+    background: var(--border);
+    flex-shrink: 0;
+}
+
+.brands-list {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.brand-pill {
+    padding: 6px 18px;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    font-size: 0.84rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    color: #000000;
+    background: var(--background);
+    transition: border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+    user-select: none;
+}
+
+.brand-pill:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 12px rgba(15,23,42,0.1);
+}
+
+.brand-pill-honda { border-color: rgba(204,0,0,0.28); color: #b91c1c; }
+.brand-pill-honda:hover { border-color: #b91c1c; box-shadow: 0 3px 12px rgba(185,28,28,0.15); }
+
+.brand-pill-yamaha { border-color: rgba(29,78,216,0.28); color: #1d4ed8; }
+.brand-pill-yamaha:hover { border-color: #1d4ed8; box-shadow: 0 3px 12px rgba(29,78,216,0.15); }
+
+.brand-pill-fiat { border-color: rgba(79,70,229,0.28); color: #4f46e5; }
+.brand-pill-fiat:hover { border-color: #4f46e5; box-shadow: 0 3px 12px rgba(79,70,229,0.15); }
+
+body[data-theme="dark"] .brands-strip {
+    background: #0f172a;
+    border-color: #1f2937;
+}
+
+body[data-theme="dark"] .brands-divider { background: #1f2937; }
+body[data-theme="dark"] .brands-label { color: #4b5563; }
+
+body[data-theme="dark"] .brand-pill {
+    background: #1f2937;
+    border-color: #374151;
+    color: #cbd5e1;
+}
+
+body[data-theme="dark"] .brand-pill-honda { color: #fca5a5; border-color: rgba(252,165,165,0.25); }
+body[data-theme="dark"] .brand-pill-yamaha { color: #93c5fd; border-color: rgba(147,197,253,0.25); }
+body[data-theme="dark"] .brand-pill-fiat { color: #a5b4fc; border-color: rgba(165,180,252,0.25); }
+
+/* ===========================================
+   SERVICE CARD ICONS
+   =========================================== */
+.service-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    background: linear-gradient(135deg, rgba(37,99,235,0.1), rgba(29,78,216,0.04));
+    border: 1.5px solid rgba(37,99,235,0.14);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+    color: var(--primary);
+    flex-shrink: 0;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.service-card:hover .service-icon {
+    background: linear-gradient(135deg, rgba(37,99,235,0.16), rgba(29,78,216,0.08));
+    transform: scale(1.06);
+}
+
+.service-icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+body[data-theme="dark"] .service-icon {
+    background: rgba(37,99,235,0.13);
+    border-color: rgba(37,99,235,0.22);
+    color: #93c5fd;
+}
+
+/* ===========================================
+   WHATSAPP CTA BAND
+   =========================================== */
+.whatsapp-band {
+    background: linear-gradient(135deg, #14532d 0%, #15803d 50%, #16a34a 100%);
+    padding: 30px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.whatsapp-band::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse at top right, rgba(255,255,255,0.1) 0%, transparent 55%),
+        radial-gradient(ellipse at bottom left, rgba(0,0,0,0.12) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.whatsapp-band-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+}
+
+.whatsapp-band-text {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.whatsapp-band-text strong {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.whatsapp-band-text span {
+    font-size: 0.93rem;
+    color: rgba(255,255,255,0.82);
+    line-height: 1.5;
+}
+
+.whatsapp-band-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    color: #15803d;
+    padding: 13px 28px;
+    border-radius: 999px;
+    font-size: 0.97rem;
+    font-weight: 800;
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    flex-shrink: 0;
+    letter-spacing: 0.01em;
+}
+
+.whatsapp-band-btn:hover {
+    transform: translateY(-2px) scale(1.025);
+    box-shadow: 0 8px 36px rgba(0,0,0,0.26);
+}
+
+.whatsapp-band-btn svg {
+    width: 22px;
+    height: 22px;
+    fill: #16a34a;
+    flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+    .whatsapp-band-inner { flex-direction: column; text-align: center; align-items: center; }
+    .whatsapp-band-btn { width: 100%; justify-content: center; }
+    .whatsapp-band-text strong { font-size: 1.1rem; }
+}
+
+/* ===========================================
+   TESTIMONIALS / DEPOIMENTOS
+   =========================================== */
+.testimonial-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.testimonial-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 24px 22px 22px;
+    border: 1px solid rgba(148,163,184,0.18);
+    box-shadow: 0 2px 10px rgba(15,23,42,0.05), 0 6px 24px rgba(15,23,42,0.06);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 36px rgba(29,78,216,0.1), 0 4px 16px rgba(15,23,42,0.08);
+}
+
+.testimonial-quote {
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    font-size: 5rem;
+    font-weight: 900;
+    color: var(--primary);
+    opacity: 0.07;
+    line-height: 1;
+    pointer-events: none;
+    font-family: Georgia, 'Times New Roman', serif;
+    user-select: none;
+}
+
+.testimonial-stars {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 12px;
+}
+
+.testimonial-stars svg {
+    width: 16px;
+    height: 16px;
+    fill: #f59e0b;
+}
+
+.testimonial-text {
+    font-size: 0.92rem;
+    color: #4b5563;
+    line-height: 1.75;
+    margin: 0 0 18px;
+    font-style: italic;
+    position: relative;
+    z-index: 1;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.testimonial-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.92rem;
+    font-weight: 800;
+    color: #fff;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(29,78,216,0.28);
+}
+
+.testimonial-info strong {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.3;
+}
+
+.testimonial-info span {
+    font-size: 0.78rem;
+    color: #6b7280;
+}
+
+body[data-theme="dark"] .testimonial-card {
+    background: #0f172a;
+    border-color: #1f2937;
+}
+
+body[data-theme="dark"] .testimonial-text { color: #94a3b8; }
+body[data-theme="dark"] .testimonial-info strong { color: #e5e7eb; }
+body[data-theme="dark"] .testimonial-info span { color: #6b7280; }
+
+/* ===========================================
+   FOOTER SOCIAL LINKS
+   =========================================== */
+.footer-social {
+    display: flex;
+    gap: 9px;
+    margin-top: 14px;
+}
+
+.footer-social-link {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.11);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.18s ease;
+    color: rgba(255,255,255,0.65);
+    text-decoration: none;
+}
+
+.footer-social-link:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.footer-social-link svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+.footer-social-link-wa:hover { background: #22c55e; border-color: #22c55e; }
+.footer-social-link-ig:hover {
+    background: radial-gradient(circle at 30% 30%, #fdf497 0%, #fdf497 15%, #fd5949 40%, #d6249f 65%, #285AEB 100%);
+    border-color: #d6249f;
+}
+
+/* ===========================================
+   VEHICLE BADGE FEATURED
+   =========================================== */
+.badge-featured {
+    background: linear-gradient(135deg, rgba(217,119,6,0.9), rgba(180,83,9,0.9)) !important;
+}
+
+/* ===========================================
+   HERO TRUST STRIP
+   =========================================== */
+.hero-trust {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(148,163,184,0.2);
+}
+
+.hero-trust-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #000000;
+}
+
+.hero-trust-item svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--primary);
+    stroke-width: 2.2;
+    fill: none;
+    flex-shrink: 0;
+}
+
+body[data-theme="dark"] .hero-trust-item { color: #cbd5e1; }
+body[data-theme="dark"] .hero-trust { border-top-color: rgba(31,41,55,0.6); }

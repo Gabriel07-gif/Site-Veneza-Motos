@@ -34,7 +34,7 @@ function animateCounters() {
 /* ===== Scroll Reveal ===== */
 function initScrollReveal() {
     const targets = document.querySelectorAll(
-        ".service-card, .vehicle-card, .about-highlights > div, .stat-item, .about-box, .contact-form, .contact-info"
+        ".service-card, .vehicle-card, .about-highlights > div, .stat-item, .about-box, .contact-form, .contact-info, .brand-pill"
     );
 
     targets.forEach((el, i) => {
@@ -312,7 +312,7 @@ function enhanceCatalogImages() {
         if (wrapper.querySelector("img")) return;
 
         const styleBg = wrapper.getAttribute("style") || "";
-        const match = styleBg.match(/url\\(['"]?([^'")]+)['"]?\\)/i);
+        const match = styleBg.match(/url\(['"]?([^'")]+)['"]?\)/i);
         const src = match ? match[1] : "";
         if (!src) return;
 
@@ -897,8 +897,6 @@ document.addEventListener("DOMContentLoaded", () => {
         contatoForm.addEventListener("submit", handleContactFormSubmit);
     }
 
-    filterVehicles("all");
-    filterCatalog();
     filterVehicles("all");
     filterCatalog();
 
