@@ -123,6 +123,23 @@ body[data-theme="light"] .theme-toggle-vehicle:hover {
     border-color: #1d4ed8;
 }
 
+.btn-share {
+    background: transparent;
+    color: #0f172a;
+    border: 1px solid rgba(15, 23, 42, 0.25);
+}
+
+.btn-share:hover,
+.btn-share:focus-visible {
+    background: rgba(15, 23, 42, 0.06);
+    color: #0f172a;
+    border-color: rgba(15, 23, 42, 0.4);
+}
+
+.btn-share i {
+    color: inherit !important;
+}
+
 @media (max-width: 980px) {
     .navbar-inner {
         justify-content: center;

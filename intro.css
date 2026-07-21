@@ -24,7 +24,7 @@
 #intro-bg {
     position: absolute;
     inset: 0;
-    background: url("Veneza entrada.webp") center center / cover no-repeat;
+    background: url("veneza-entrada.webp") center center / cover no-repeat;
     transform: scale(1.08);
     animation: introBgFloat 5s ease-out forwards;
     filter: brightness(0.45);
