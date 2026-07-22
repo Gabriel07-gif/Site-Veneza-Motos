@@ -2,14 +2,26 @@
    Vehicle Detail Page — Veneza Motos e Veículos
    ============================================ */
 
+:root {
+  --azul-escuro: #020617;
+  --azul: #1d4ed8;
+  --preto: #000000;
+  --branco: #ffffff;
+}
+
 /* ===== Base ===== */
 body {
   background: linear-gradient(160deg, #020617 0%, #0b1120 50%, #000000 100%);
   color: #ffffff;
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   min-height: 100vh;
   margin: 0;
   padding-bottom: 0;
+}
+
+.container-fluid.mt-4.mb-5 {
+  padding-left: clamp(12px, 4vw, 24px);
+  padding-right: clamp(12px, 4vw, 24px);
 }
 
 /* ===== Carousel ===== */
@@ -21,7 +33,7 @@ body {
 }
 
 .detail-carousel img {
-  height: clamp(300px, 40vw, 560px);
+  height: clamp(260px, 42vw, 560px);
   object-fit: cover;
   width: 100%;
   display: block;
@@ -42,27 +54,60 @@ body {
   z-index: 1;
 }
 
+.carousel-control-prev,
+.carousel-control-next {
+  width: 15%;
+  min-width: 44px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.detail-carousel:hover .carousel-control-prev,
+.detail-carousel:hover .carousel-control-next,
+.detail-carousel:focus-within .carousel-control-prev,
+.detail-carousel:focus-within .carousel-control-next {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .carousel-control-prev,
+  .carousel-control-next {
+    opacity: 0.85;
+  }
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  width: 2.2rem;
+  height: 2.2rem;
+  background-color: rgba(15, 23, 42, 0.55);
+  border-radius: 50%;
+  padding: 8px;
+  background-size: 55%;
+}
+
 /* ===== Detail Card ===== */
 .detail-card {
   background: #ffffff;
   color: #0f172a;
-  padding: 28px 24px;
+  padding: clamp(18px, 3vw, 28px) clamp(16px, 2.5vw, 24px);
   border-radius: 14px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
   height: fit-content;
 }
 
 .detail-card h2 {
-  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+  font-size: clamp(1.3rem, 2.5vw, 1.85rem);
   font-weight: 800;
   letter-spacing: 0.01em;
   color: #0f172a;
   margin-bottom: 2px;
+  word-break: break-word;
 }
 
 .detail-card .text-dark.fs-4 {
   color: #1d4ed8 !important;
-  font-size: clamp(1.45rem, 3.2vw, 1.95rem) !important;
+  font-size: clamp(1.4rem, 3.2vw, 1.95rem) !important;
   font-weight: 700 !important;
   margin-bottom: 4px;
 }
@@ -73,11 +118,17 @@ body {
 }
 
 /* Table */
+.detail-card .table-responsive-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .detail-card .table {
   font-size: 0.92rem;
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: 8px;
+  min-width: 260px;
 }
 
 .detail-card .table th {
@@ -99,24 +150,29 @@ body {
   background-color: rgba(241, 245, 249, 0.85);
 }
 
-/* ===== CTA Buttons in detail card ===== */
-.detail-card .btn-success {
+/* ===== CTA Buttons in detail card (desktop / tablet) ===== */
+.detail-card .btn-success,
+.detail-card .btn-test-drive,
+.detail-card .btn-share {
   display: flex !important;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: linear-gradient(135deg, #16a34a, #15803d) !important;
-  border: none !important;
   border-radius: 10px !important;
   padding: 13px 20px !important;
   font-weight: 700 !important;
   font-size: 1rem !important;
-  box-shadow: 0 4px 16px rgba(22, 163, 74, 0.3) !important;
   transition: all 0.2s ease !important;
   width: 100%;
   margin-left: 0 !important;
-  margin-top: 16px !important;
   text-decoration: none;
+}
+
+.detail-card .btn-success {
+  background: linear-gradient(135deg, #16a34a, #15803d) !important;
+  border: none !important;
+  box-shadow: 0 4px 16px rgba(22, 163, 74, 0.3) !important;
+  margin-top: 16px !important;
 }
 
 .detail-card .btn-success:hover {
@@ -127,22 +183,11 @@ body {
 }
 
 .detail-card .btn-test-drive {
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
   background: transparent !important;
   color: #1d4ed8 !important;
   border: 2px solid #1d4ed8 !important;
-  border-radius: 10px !important;
-  padding: 11px 20px !important;
-  font-weight: 700 !important;
   font-size: 0.95rem !important;
-  transition: all 0.2s ease !important;
-  width: 100%;
-  margin-left: 0 !important;
   margin-top: 10px !important;
-  text-decoration: none;
 }
 
 .detail-card .btn-test-drive:hover {
@@ -158,6 +203,45 @@ body {
 
 .detail-card .btn-test-drive:hover i {
   color: #ffffff !important;
+}
+
+.detail-card .btn-share {
+  background: transparent !important;
+  color: #0f172a !important;
+  border: 1.5px solid rgba(15, 23, 42, 0.2) !important;
+  font-size: 0.95rem !important;
+  margin-top: 10px !important;
+}
+
+.detail-card .btn-share:hover {
+  background: rgba(15, 23, 42, 0.06) !important;
+  border-color: rgba(15, 23, 42, 0.4) !important;
+  transform: translateY(-2px);
+}
+
+.detail-card .btn-share i {
+  color: inherit !important;
+}
+
+/* Buttons row wraps side-by-side from tablet up for a tidier layout */
+@media (min-width: 480px) {
+  .detail-card .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .detail-card .cta-row .btn-success,
+  .detail-card .cta-row .btn-test-drive,
+  .detail-card .cta-row .btn-share {
+    width: auto;
+    flex: 1 1 200px;
+    margin-top: 0 !important;
+  }
+
+  .detail-card .cta-row {
+    margin-top: 16px;
+  }
 }
 
 /* ===== Footer ===== */
@@ -180,29 +264,42 @@ body {
   left: 0;
   right: 0;
   z-index: 200;
-  padding: 10px 14px;
+  padding: 10px 12px;
+  padding-bottom: max(10px, env(safe-area-inset-bottom));
   background: rgba(2, 6, 23, 0.97);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  gap: 10px;
+  gap: 8px;
 }
 
 .vehicle-mobile-cta .mob-btn {
   flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  padding: 12px 10px;
+  gap: 3px;
+  padding: 9px 6px;
   border-radius: 10px;
-  font-size: 0.88rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-decoration: none;
   border: none;
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
   cursor: pointer;
-  line-height: 1;
+  line-height: 1.15;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.vehicle-mobile-cta .mob-btn:active {
+  transform: scale(0.94);
+}
+
+.vehicle-mobile-cta .mob-btn svg {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
 }
 
 .vehicle-mobile-cta .mob-btn-call {
@@ -227,6 +324,18 @@ body {
 .vehicle-mobile-cta .mob-btn-wa:active {
   background: linear-gradient(135deg, #15803d, #166534);
   color: #ffffff;
+}
+
+.vehicle-mobile-cta .mob-btn-share {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+}
+
+.vehicle-mobile-cta .mob-btn-share:hover,
+.vehicle-mobile-cta .mob-btn-share:active {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 /* ===== Light Theme ===== */
@@ -256,14 +365,20 @@ body[data-theme="light"] .site-footer {
   color: #e5e7eb;
 }
 
+/* ===== Focus visibility (accessibility) ===== */
+.detail-card a:focus-visible,
+.detail-card button:focus-visible,
+.vehicle-mobile-cta a:focus-visible,
+.vehicle-mobile-cta button:focus-visible,
+.vehicle-fs-btn:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.55);
+  outline-offset: 2px;
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 767px) {
   body {
-    padding-bottom: 76px;
-  }
-
-  .detail-carousel img {
-    height: clamp(240px, 64vw, 400px);
+    padding-bottom: 82px;
   }
 
   .vehicle-mobile-cta {
@@ -271,13 +386,12 @@ body[data-theme="light"] .site-footer {
   }
 
   /* Hide inline CTA buttons on mobile — handled by the bottom bar */
-  .detail-card .btn-success,
-  .detail-card .btn-test-drive {
-    display: none !important;
+  .detail-card .cta-row {
+    display: none;
   }
 
   .detail-card {
-    padding: 20px 16px;
+    padding: 18px 16px 20px;
   }
 
   .detail-card h2 {
@@ -289,13 +403,20 @@ body[data-theme="light"] .site-footer {
   }
 }
 
-@media (max-width: 480px) {
-  .detail-carousel img {
-    height: clamp(200px, 68vw, 340px);
+@media (max-width: 380px) {
+  .vehicle-mobile-cta .mob-btn {
+    font-size: 0.66rem;
+    padding: 8px 4px;
   }
 
-  .vehicle-mobile-cta .mob-btn {
-    font-size: 0.83rem;
-    padding: 11px 8px;
+  .vehicle-mobile-cta .mob-btn svg {
+    width: 17px;
+    height: 17px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .detail-carousel img {
+    height: clamp(320px, 46vw, 460px);
   }
 }

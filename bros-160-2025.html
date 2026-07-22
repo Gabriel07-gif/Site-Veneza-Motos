@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.webp">
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.webp">
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.webp">
+  <link rel="icon" type="image/webp" sizes="32x32" href="favicon-32x32.webp">
+  <link rel="icon" type="image/webp" sizes="16x16" href="favicon-16x16.webp">
   <link rel="manifest" href="site.webmanifest">
   <link rel="shortcut icon" href="favicon.ico">
 
@@ -24,112 +24,8 @@
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="vehicle-nav.css">
+  <link rel="stylesheet" href="vehicle-page.css">
 <script src="https://unpkg.com/feather-icons@4.29.2/dist/feather.min.js" crossorigin="anonymous"></script>
-  <style>
-    :root {
-      --azul-escuro: #020617;
-      --azul: #1d4ed8;
-      --preto: #000000;
-      --branco: #ffffff;
-    }
-    body {
-      background: linear-gradient(to bottom, #020617 0%, #0b1120 40%, #000000 100%);
-      color: var(--branco);
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      min-height: 100vh;
-      margin: 0;
-      padding-bottom: 60px;
-    }
-    .detail-carousel img {
-      height: 590px;
-      object-fit: cover;
-      border-radius: 8px;
-    }
-    .detail-card {
-      background: rgba(255,255,255,0.96);
-      color: var(--preto);
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-    }
-    .site-footer {
-      text-align: center;
-      color: var(--branco);
-      background-color: rgba(0, 0, 0, 0.9);
-      padding: 15px;
-      border-top: 2px solid var(--azul);
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      font-size: 0.9rem;
-    }
-    @media (max-width: 768px) {
-      .detail-carousel img { height: 220px; }
-    }
-      .btn-test-drive {
-      background: #000000;
-      color: #ffffff;
-      border-color: #000000;
-    }
-    .btn-test-drive:hover {
-      background: #111827;
-      color: #ffffff;
-      border-color: #111827;
-    }
-    .btn-test-drive i {
-      color: #ffffff !important;
-    }
-  /* Tema claro/escuro nas páginas de veículo */
-  body[data-theme="light"] {
-    background: #f8fafc;
-    color: #0f172a;
-  }
-  body[data-theme="light"] .navbar {
-    background: #ffffff !important;
-    border-bottom: 2px solid var(--azul);
-  }
-  body[data-theme="light"] .navbar a {
-    color: #0f172a !important;
-  }
-  body[data-theme="light"] .detail-card {
-    background: #ffffff;
-    color: #0f172a;
-  }
-  body[data-theme="light"] .detail-card table,
-  body[data-theme="light"] .detail-card th,
-  body[data-theme="light"] .detail-card td {
-    color: #0f172a;
-  }
-  body[data-theme="light"] .site-footer {
-    background: #0f172a;
-    color: #e5e7eb;
-  }
-  .theme-toggle-vehicle {
-    margin-left: 24px; margin-right: 0;
-    background: transparent;
-    color: #e5e7eb;
-    border: 1px solid rgba(255,255,255,0.3);
-    padding: 6px 12px;
-    border-radius: 999px;
-    font-weight: 600;
-    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-  }
-  .theme-toggle-vehicle:hover {
-    background: rgba(255,255,255,0.1);
-    color: #ffffff;
-    border-color: rgba(255,255,255,0.6);
-  }
-  body[data-theme="light"] .theme-toggle-vehicle {
-    color: #0f172a;
-    border-color: rgba(15,23,42,0.2);
-    background: rgba(255,255,255,0.7);
-  }
-  body[data-theme="light"] .theme-toggle-vehicle:hover {
-    background: rgba(37,99,235,0.1);
-    color: #1d4ed8;
-    border-color: #1d4ed8;
-  }
-  </style>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -176,7 +72,7 @@
     <div class="col-lg-10">
       <div class="row g-4">
         <div class="col-md-6">
-          <div id="carouselCarro" class="carousel slide detail-carousel" data-bs-ride="carousel">
+          <div id="carouselCarro" class="carousel slide detail-carousel" data-bs-ride="carousel" data-bs-interval="false">
             <div class="carousel-inner rounded shadow">
               <div class="carousel-item active">
                 <img loading="lazy" src="Imagens otimizadas/Imagens motos/445.jpg" class="d-block w-100" alt="HONDA BROS 160 CBS FRENTE DIREITA">
@@ -216,6 +112,7 @@
           <div class="detail-card">
             <h2 class="fw-bold">HONDA BROS 160 CBS</h2>
             <p class="text-dark fs-4 fw-semibold">R$ 25.900</p>
+            <div class="table-responsive-wrap">
             <table class="table table-striped align-middle">
               <tbody>
                 <tr>
@@ -236,22 +133,42 @@
                 </tr>
               </tbody>
             </table>
+            </div>
       
-            <a href="https://wa.me/5585986114901?text=Ola%2C+tenho+interesse+na+moto+HONDA+BROS+160+CBS+2025+anunciada+no+site+Veneza+Motos+e+Veiculos." class="btn btn-success btn-lg mt-3" target="_blank" rel="noopener noreferrer">
-              <i data-feather="message-circle" class="text-light"></i> Falar no WhatsApp
-            </a>
-            <a href="index.html#contato" class="btn btn-lg mt-3 ms-2 btn-test-drive">
-              <i data-feather="calendar" class="text-light"></i> Agendar test drive
-            </a>
-            <button type="button" class="btn btn-lg mt-3 ms-2 btn-share" id="btn-share-vehicle">
-              <i data-feather="share-2" class="text-light"></i> Compartilhar
-            </button>
+            <div class="cta-row">
+      
+              <a href="https://wa.me/5585986114901?text=Ola%2C+tenho+interesse+na+moto+HONDA+BROS+160+CBS+2025+anunciada+no+site+Veneza+Motos+e+Veiculos." class="btn btn-success btn-lg mt-3" target="_blank" rel="noopener noreferrer">
+                <i data-feather="message-circle" class="text-light"></i> Falar no WhatsApp
+              </a>
+              <a href="index.html#contato" class="btn btn-lg mt-3 ms-2 btn-test-drive">
+                <i data-feather="calendar" class="text-light"></i> Agendar test drive
+              </a>
+              <button type="button" class="btn btn-lg mt-3 ms-2 btn-share js-share-vehicle" id="btn-share-vehicle">
+                <i data-feather="share-2" class="text-light"></i> Compartilhar
+              </button>
+      
+            </div>
           </div>
         </div>
 
       </div>
     </div>
   </div>
+</div>
+
+<div class="vehicle-mobile-cta">
+  <a href="tel:+5585986114901" class="mob-btn mob-btn-call" aria-label="Ligar para a Veneza Motos">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.95 9.27a19.79 19.79 0 01-3.07-8.67A2 2 0 012.88 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+    <span>Ligar</span>
+  </a>
+  <a href="https://wa.me/5585986114901?text=Ola%2C+tenho+interesse+na+moto+HONDA+BROS+160+CBS+2025+anunciada+no+site+Veneza+Motos+e+Veiculos." class="mob-btn mob-btn-wa" target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp sobre este veiculo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    <span>WhatsApp</span>
+  </a>
+  <button type="button" class="mob-btn mob-btn-share js-share-vehicle" aria-label="Compartilhar este veiculo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+    <span>Compartilhar</span>
+  </button>
 </div>
 
 <footer class="site-footer">

@@ -176,7 +176,7 @@ function initVehicleImagePreview() {
             <button type="button" class="vehicle-preview-nav vehicle-preview-prev" aria-label="Foto anterior">
                 <i data-feather="chevron-left"></i>
             </button>
-            <img class="vehicle-preview-img" alt="Foto do veiculo" />
+            <img class="vehicle-preview-img" alt="Foto do veiculo" decoding="async" />
             <button type="button" class="vehicle-preview-nav vehicle-preview-next" aria-label="Proxima foto">
                 <i data-feather="chevron-right"></i>
             </button>
@@ -193,6 +193,32 @@ function initVehicleImagePreview() {
     const defaultAlt = "Foto do veiculo";
     let currentImages = [];
     let currentIndex = 0;
+
+    /* ── Preload cache: busca e decodifica as fotos com antecedência para a
+       navegação (setas/swipe) parecer instantânea, sem esperar a rede. ── */
+    const imageCache = new Map();
+    const preload = (src) => {
+        if (!src || imageCache.has(src)) return;
+        const img = new Image();
+        img.decoding = "async";
+        img.src = src;
+        imageCache.set(src, img);
+    };
+    const preloadNeighbors = (index) => {
+        const total = currentImages.length;
+        if (!total) return;
+        preload(currentImages[index]?.src);
+        preload(currentImages[(index + 1) % total]?.src);
+        preload(currentImages[(index - 1 + total) % total]?.src);
+    };
+    const preloadAllIdle = () => {
+        const run = () => currentImages.forEach((item) => preload(item.src));
+        if ("requestIdleCallback" in window) {
+            window.requestIdleCallback(run, { timeout: 2000 });
+        } else {
+            setTimeout(run, 300);
+        }
+    };
 
     const parseSources = (value) =>
         (value || "")
@@ -215,14 +241,29 @@ function initVehicleImagePreview() {
         countEl.textContent = hasMany ? `${currentIndex + 1} / ${currentImages.length}` : "";
     };
 
-    const showImageAt = (index) => {
+    const FADE_MS = 110;
+
+    const showImageAt = (index, instant = false) => {
         if (!currentImages.length) return;
         const total = currentImages.length;
         currentIndex = ((index % total) + total) % total;
         const { src, alt } = currentImages[currentIndex];
-        overlayImg.src = src;
-        overlayImg.alt = alt || defaultAlt;
-        updateNav();
+        preloadNeighbors(currentIndex);
+
+        const apply = () => {
+            overlayImg.src = src;
+            overlayImg.alt = alt || defaultAlt;
+            updateNav();
+            requestAnimationFrame(() => overlayImg.classList.remove("is-fading"));
+        };
+
+        if (instant) {
+            apply();
+            return;
+        }
+
+        overlayImg.classList.add("is-fading");
+        window.setTimeout(apply, FADE_MS);
     };
 
     const exitFullscreen = () => {
@@ -242,9 +283,10 @@ function initVehicleImagePreview() {
     const openOverlay = (images, startIndex = 0) => {
         if (!images.length) return;
         currentImages = images;
-        showImageAt(startIndex);
+        showImageAt(startIndex, true);
         overlay.classList.add("open");
         overlay.setAttribute("aria-hidden", "false");
+        preloadAllIdle();
         if (overlay.requestFullscreen) {
             overlay.requestFullscreen().catch(() => {});
         }
@@ -271,6 +313,39 @@ function initVehicleImagePreview() {
         }
     });
 
+    /* ── Swipe navigation (touch) ── */
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchActive = false;
+
+    overlay.addEventListener(
+        "touchstart",
+        (event) => {
+            if (event.touches.length !== 1) return;
+            touchActive = true;
+            touchStartX = event.touches[0].clientX;
+            touchStartY = event.touches[0].clientY;
+        },
+        { passive: true }
+    );
+
+    overlay.addEventListener(
+        "touchend",
+        (event) => {
+            if (!touchActive) return;
+            touchActive = false;
+            const touch = event.changedTouches[0];
+            const dx = touch.clientX - touchStartX;
+            const dy = touch.clientY - touchStartY;
+            const SWIPE_THRESHOLD = 40;
+            if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
+                if (dx < 0) showImageAt(currentIndex + 1);
+                else showImageAt(currentIndex - 1);
+            }
+        },
+        { passive: true }
+    );
+
     imageEls.forEach((imgEl) => {
         const card = imgEl.closest(".vehicle-card");
         const title = card?.querySelector("h3")?.textContent?.trim() || "";
@@ -288,6 +363,15 @@ function initVehicleImagePreview() {
             }
             return sources;
         };
+
+        // Ao passar o mouse ou focar a miniatura, já aquecemos o cache de
+        // imagens: quando o usuário clicar, a abertura é instantânea.
+        const warmUp = () => {
+            const sources = getSources();
+            sources.forEach(preload);
+        };
+        imgEl.addEventListener("pointerenter", warmUp, { once: true });
+        imgEl.addEventListener("focus", warmUp, { once: true });
 
         const openFromEl = () => {
             const sources = getSources();
