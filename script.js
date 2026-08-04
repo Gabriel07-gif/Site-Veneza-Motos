@@ -1056,6 +1056,25 @@ document.addEventListener("DOMContentLoaded", () => {
             "Envie também sua renda aproximada e se possui veículo na troca para receber uma simulação mais precisa.";
         contactHeader.appendChild(extra);
     }
+    // ===== Acessibilidade: aria-label automático para imagens de veículos =====
+    document.querySelectorAll('.vehicle-image').forEach(function(el) {
+        var card = el.closest('.vehicle-card');
+        var h3 = card && card.querySelector('h3');
+        if (h3) {
+            el.setAttribute('role', 'img');
+            el.setAttribute('aria-label', 'Foto do veículo: ' + h3.textContent.trim());
+        }
+    });
+
+    document.querySelectorAll('.catalog-card-image').forEach(function(el) {
+        var card = el.closest('.catalog-card');
+        var h3 = card && card.querySelector('h3');
+        if (h3) {
+            el.setAttribute('role', 'img');
+            el.setAttribute('aria-label', 'Foto do veículo: ' + h3.textContent.trim());
+        }
+    });
+
     } catch (error) {
         console.error("Erro ao inicializar os scripts da página:", error);
     }

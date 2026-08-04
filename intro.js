@@ -3,7 +3,7 @@
 
     /* ── Config ──────────────────────────────────── */
     var DURATION       = 3800;   // ms before auto-dismiss
-    var PARTICLE_COUNT = 55;     // floating particles
+    var PARTICLE_COUNT = window.innerWidth <= 768 ? 25 : 55; // menos partículas no mobile
 
     /* ── State ───────────────────────────────────── */
     var dismissed = false;
@@ -140,7 +140,7 @@
         loop();
 
         // skip button
-        skipBtn.addEventListener('click', dismiss);
+        if (skipBtn) skipBtn.addEventListener('click', dismiss);
 
         // keyboard: Enter or Space
         document.addEventListener('keydown', function(e) {

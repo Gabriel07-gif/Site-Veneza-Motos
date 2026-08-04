@@ -194,3 +194,111 @@
         padding: 7px 14px;
     }
 }
+
+/* ============================================================
+   ANIMAÇÃO MOBILE — substitui a foto por gradient + rings
+   ============================================================ */
+
+/* Esconde o elemento mobile no desktop */
+#intro-mobile-pulse {
+    display: none;
+}
+
+@media (max-width: 768px) {
+
+    /* Remove a foto de fundo no mobile */
+    #intro-bg {
+        display: none;
+    }
+
+    /* Fundo gradient azul escuro no mobile */
+    #intro-overlay {
+        background: linear-gradient(160deg, #020617 0%, #0d1b3e 48%, #1a2f6b 100%);
+    }
+
+    /* Ativa o elemento de rings pulsantes */
+    #intro-mobile-pulse {
+        display: block;
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    /* Glow central suave */
+    .mobile-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 280px;
+        height: 280px;
+        margin-left: -140px;
+        margin-top: -140px;
+        border-radius: 50%;
+        background: radial-gradient(
+            circle,
+            rgba(29, 78, 216, 0.55) 0%,
+            rgba(37, 99, 235, 0.22) 42%,
+            transparent 72%
+        );
+        opacity: 0;
+        animation: mobileGlowIn 1.4s ease-out 0.25s forwards;
+    }
+
+    /* Rings expandindo a partir do centro */
+    .mobile-ring {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        border-radius: 50%;
+        border: 1.5px solid rgba(96, 165, 250, 0.6);
+        opacity: 0;
+        animation: mobilePulseRing 3.4s cubic-bezier(0.15, 0.8, 0.35, 1) infinite;
+    }
+
+    .mobile-ring:nth-child(2) {
+        width: 130px;
+        height: 130px;
+        margin-left: -65px;
+        margin-top: -65px;
+        animation-delay: 0.4s;
+    }
+
+    .mobile-ring:nth-child(3) {
+        width: 240px;
+        height: 240px;
+        margin-left: -120px;
+        margin-top: -120px;
+        animation-delay: 1.1s;
+        border-color: rgba(96, 165, 250, 0.42);
+    }
+
+    .mobile-ring:nth-child(4) {
+        width: 370px;
+        height: 370px;
+        margin-left: -185px;
+        margin-top: -185px;
+        animation-delay: 1.8s;
+        border-color: rgba(96, 165, 250, 0.22);
+    }
+
+    /* Substitui floatUp por scale+blur reveal no mobile */
+    #intro-brand {
+        animation: mobileBrandReveal 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.55s forwards;
+    }
+}
+
+@keyframes mobileGlowIn {
+    from { opacity: 0; transform: scale(0.4); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes mobilePulseRing {
+    0%   { transform: scale(0.25); opacity: 0.85; }
+    100% { transform: scale(1.6);  opacity: 0; }
+}
+
+@keyframes mobileBrandReveal {
+    from { opacity: 0; transform: scale(0.82) translateY(12px); filter: blur(5px); }
+    to   { opacity: 1; transform: scale(1)    translateY(0);    filter: blur(0px); }
+}

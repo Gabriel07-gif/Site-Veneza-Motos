@@ -1426,10 +1426,6 @@ body[data-theme="dark"] .btn-secondary:hover {
         flex-wrap: wrap;
     }
 
-    .btn-whatsapp {
-        display: inline-flex;
-    }
-
     .topbar-content {
         flex-direction: column;
         align-items: flex-start;
@@ -1455,13 +1451,6 @@ body[data-theme="dark"] .btn-secondary:hover {
 }
 
 @media (max-width: 768px) {
-    .nav-links {
-        width: 100%;
-        justify-content: center;
-    }
-    .navbar-content {
-        justify-content: center;
-    }
     .hero-text h1 {
         font-size: 2rem;
     }
@@ -1686,8 +1675,8 @@ body[data-theme="dark"] .btn-secondary:hover {
     justify-content: center;
 }
 
-/* ===== Show hamburger on small screens ===== */
-@media (max-width: 768px) {
+/* ===== Show hamburger on tablets and small screens ===== */
+@media (max-width: 900px) {
     .hamburger {
         display: flex;
     }
@@ -2653,3 +2642,197 @@ body[data-theme="dark"] .testimonial-info span { color: #6b7280; }
 
 body[data-theme="dark"] .hero-trust-item { color: #cbd5e1; }
 body[data-theme="dark"] .hero-trust { border-top-color: rgba(31,41,55,0.6); }
+
+/* ===========================================
+   ANIMAÇÃO DE ENTRADA — CARDS REDES SOCIAIS
+   Usados em midias-sociais.html via IntersectionObserver
+   =========================================== */
+.moto-scroll {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22, 0.9, 0.25, 1);
+}
+
+.moto-scroll-left {
+    transform: translateX(-32px);
+}
+
+.moto-scroll-right {
+    transform: translateX(32px);
+}
+
+.moto-in-view {
+    opacity: 1 !important;
+    transform: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .moto-scroll {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
+
+/* ===========================================
+   GOOGLE MAPS EMBED
+   =========================================== */
+.map-wrapper {
+    margin-top: 20px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.12);
+    border: 1px solid var(--border);
+    line-height: 0;
+}
+
+.map-wrapper iframe {
+    display: block;
+    width: 100%;
+    border: 0;
+}
+
+@media (max-width: 640px) {
+    .map-wrapper iframe {
+        height: 220px;
+    }
+}
+
+/* ===========================================
+   RESPONSIVIDADE — MELHORIAS GERAIS
+   =========================================== */
+
+/* Hero: botões mobile com largura total */
+@media (max-width: 480px) {
+    .hero-text h1 {
+        font-size: 1.7rem;
+    }
+    .hero {
+        padding: 28px 0 40px;
+    }
+    .hero-trust {
+        gap: 10px;
+    }
+    .hero-trust-item {
+        font-size: 0.78rem;
+    }
+}
+
+/* Seção sobre: grid responsivo */
+@media (max-width: 640px) {
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+    .about-highlights {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* Footer responsivo em telas muito pequenas */
+@media (max-width: 380px) {
+    .footer-bottom-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+    .footer-dev {
+        order: 2;
+    }
+}
+
+/* Imagens de veículos: tamanho mínimo mais confortável */
+@media (max-width: 480px) {
+    .vehicle-image {
+        height: clamp(200px, 58vw, 260px);
+    }
+    .catalog-card-image {
+        height: clamp(160px, 48vw, 200px);
+    }
+}
+
+/* Card de redes sociais em midias-sociais.html */
+@media (max-width: 640px) {
+    .hero-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .hero-card-header a img {
+        width: 64px !important;
+        height: 64px !important;
+    }
+}
+
+/* Seção de contato: ajuste de padding */
+@media (max-width: 480px) {
+    .contact-form {
+        padding: 16px 14px 18px;
+    }
+    .section {
+        padding: 40px 0;
+    }
+}
+
+/* ===========================================
+   CRÉDITO DE DESENVOLVIMENTO
+   =========================================== */
+.dev-credit-wrap {
+    border-top: 1px solid rgba(148, 163, 184, 0.2);
+    padding: 14px 0;
+    text-align: center;
+}
+
+.dev-credit-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #6b7280;
+    font-size: 0.88rem;
+    transition: color 0.2s, opacity 0.2s;
+}
+
+.dev-credit-link:hover {
+    color: #3b82f6;
+    opacity: 0.9;
+}
+
+.dev-logo-svg {
+    flex-shrink: 0;
+    border-radius: 9px;
+    transition: transform 0.22s;
+}
+
+.dev-credit-link:hover .dev-logo-svg {
+    transform: scale(1.1);
+}
+
+.dev-credit-name {
+    color: #3b82f6;
+    font-weight: 700;
+}
+
+body[data-theme="dark"] .dev-credit-link {
+    color: #9ca3af;
+}
+
+body[data-theme="dark"] .dev-credit-name {
+    color: #93c5fd;
+}
+
+.footer-dev {
+    font-size: 0.78rem;
+    color: #6b7280;
+    white-space: nowrap;
+}
+
+.footer-dev strong {
+    color: #93c5fd;
+    font-weight: 700;
+}
+
+@media (max-width: 640px) {
+    .footer-dev {
+        font-size: 0.75rem;
+    }
+}
