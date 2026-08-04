@@ -169,14 +169,14 @@ function initVehicleImagePreview() {
     overlay.className = "vehicle-preview-overlay";
     overlay.setAttribute("aria-hidden", "true");
     overlay.innerHTML = `
-        <div class="vehicle-preview-content" role="dialog" aria-modal="true" aria-label="Foto do veiculo">
+        <div class="vehicle-preview-content" role="dialog" aria-modal="true" aria-label="Foto do veículo">
             <button type="button" class="vehicle-preview-close" aria-label="Fechar foto">
                 <i data-feather="x"></i>
             </button>
             <button type="button" class="vehicle-preview-nav vehicle-preview-prev" aria-label="Foto anterior">
                 <i data-feather="chevron-left"></i>
             </button>
-            <img class="vehicle-preview-img" alt="Foto do veiculo" decoding="async" />
+            <img class="vehicle-preview-img" alt="Foto do veículo" decoding="async" />
             <button type="button" class="vehicle-preview-nav vehicle-preview-next" aria-label="Proxima foto">
                 <i data-feather="chevron-right"></i>
             </button>
@@ -190,15 +190,18 @@ function initVehicleImagePreview() {
     const prevBtn = overlay.querySelector(".vehicle-preview-prev");
     const nextBtn = overlay.querySelector(".vehicle-preview-next");
     const countEl = overlay.querySelector(".vehicle-preview-count");
-    const defaultAlt = "Foto do veiculo";
+    const defaultAlt = "Foto do veículo";
     let currentImages = [];
     let currentIndex = 0;
 
-    /* ── Preload cache: busca e decodifica as fotos com antecedência para a
-       navegação (setas/swipe) parecer instantânea, sem esperar a rede. ── */
+    /* ── Preload cache com limite para evitar vazamento de memória. ── */
+    const MAX_CACHE_SIZE = 60;
     const imageCache = new Map();
     const preload = (src) => {
         if (!src || imageCache.has(src)) return;
+        if (imageCache.size >= MAX_CACHE_SIZE) {
+            imageCache.delete(imageCache.keys().next().value);
+        }
         const img = new Image();
         img.decoding = "async";
         img.src = src;
@@ -423,6 +426,20 @@ window.addEventListener("unhandledrejection", (event) => {
     console.error("Promise rejeitada sem tratamento:", event.reason || event);
 });
 
+function isValidCpf(digits) {
+    if (digits.length !== 11 || /^(\d)\1{10}$/.test(digits)) return false;
+    let sum = 0;
+    for (let i = 0; i < 9; i++) sum += parseInt(digits[i]) * (10 - i);
+    let rest = (sum * 10) % 11;
+    if (rest >= 10) rest = 0;
+    if (rest !== parseInt(digits[9])) return false;
+    sum = 0;
+    for (let i = 0; i < 10; i++) sum += parseInt(digits[i]) * (11 - i);
+    rest = (sum * 10) % 11;
+    if (rest >= 10) rest = 0;
+    return rest === parseInt(digits[10]);
+}
+
 function formatCpfMask(value) {
     const digits = (value || "").replace(/\D/g, "").slice(0, 11);
     const parts = [];
@@ -447,14 +464,9 @@ function formatPhoneMask(value) {
 }
 
 function initSimulationFormConstraints() {
-    const alertUser = (message) => window.alert(message);
-
     const cpfInput = document.getElementById("cpf-financiamento");
     if (cpfInput) {
         cpfInput.addEventListener("input", () => {
-            if (/[A-Za-z]/.test(cpfInput.value)) {
-                alertUser("CPF deve conter apenas numeros.");
-            }
             cpfInput.value = formatCpfMask(cpfInput.value);
         });
     }
@@ -462,9 +474,6 @@ function initSimulationFormConstraints() {
     const phoneInput = document.getElementById("celular-financiamento");
     if (phoneInput) {
         phoneInput.addEventListener("input", () => {
-            if (/[A-Za-z]/.test(phoneInput.value)) {
-                alertUser("Numero de celular deve conter apenas numeros.");
-            }
             phoneInput.value = formatPhoneMask(phoneInput.value);
         });
     }
@@ -472,23 +481,15 @@ function initSimulationFormConstraints() {
     const nameInput = document.getElementById("nome-financiamento");
     if (nameInput) {
         nameInput.addEventListener("input", () => {
-            if (/\d/.test(nameInput.value)) {
-                alertUser("Nome completo deve conter apenas letras.");
-            }
             nameInput.value = nameInput.value.replace(/[0-9]/g, "");
         });
     }
 }
 
 function initContactFormConstraints() {
-    const alertUser = (message) => window.alert(message);
-
     const nomeContato = document.querySelector("#contato #nome");
     if (nomeContato) {
         nomeContato.addEventListener("input", () => {
-            if (/\d/.test(nomeContato.value)) {
-                alertUser("Nome nao pode conter numeros.");
-            }
             nomeContato.value = nomeContato.value.replace(/[0-9]/g, "");
         });
     }
@@ -496,9 +497,6 @@ function initContactFormConstraints() {
     const telefoneContato = document.querySelector("#contato #telefone");
     if (telefoneContato) {
         telefoneContato.addEventListener("input", () => {
-            if (/[A-Za-z]/.test(telefoneContato.value)) {
-                alertUser("Telefone deve conter apenas numeros.");
-            }
             telefoneContato.value = formatPhoneMask(telefoneContato.value);
         });
     }
@@ -559,8 +557,8 @@ function handleSimulationFormSubmit(event) {
         showError("Informe o nome completo usando apenas letras.", form.querySelector("#nome-financiamento"));
         return false;
     }
-    if (cpfDigits.length !== 11) {
-        showError("Informe um CPF com 11 dígitos.", form.querySelector("#cpf-financiamento"));
+    if (!isValidCpf(cpfDigits)) {
+        showError("Informe um CPF válido.", form.querySelector("#cpf-financiamento"));
         return false;
     }
     if (celularDigits.length !== 10 && celularDigits.length !== 11) {
