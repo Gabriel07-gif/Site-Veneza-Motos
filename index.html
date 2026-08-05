@@ -9,7 +9,7 @@
   <link rel="manifest" href="site.webmanifest">
   <link rel="shortcut icon" href="favicon.ico">
 
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; frame-src https://maps.google.com https://www.google.com; base-uri 'self'; form-action 'self' https://wa.me;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; worker-src blob:; frame-src https://maps.google.com https://www.google.com; base-uri 'self'; form-action 'self' https://wa.me;">
             <meta name="referrer" content="no-referrer">
     <title>Veneza Motos e Veículos</title>
     <meta name="description" content="Veneza Motos e Veículos - compra, venda, troca e consignação de motos e carros com condições especiais de financiamento.">
@@ -181,13 +181,24 @@
                     </div>
                 </div>
                 <div class="hero-image">
-                    <div class="hero-card hero-card-car">
-                        <h3>Carros selecionados</h3>
-                        <p>Hatches, sedãs, SUVs e utilitários para todos os perfis.</p>
+                    <!-- Canvas 3D interativo da moto -->
+                    <div class="hero-3d-container" id="hero-3d-mount"
+                         role="img" aria-label="Moto interativa em 3D — mova o cursor para explorar">
+                        <span class="hero-3d-hint" aria-hidden="true">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><path d="M5 9l-3 3 3 3"/><path d="M19 9l3 3-3 3"/><path d="M2 12h20"/></svg>
+                            Arraste para interagir
+                        </span>
                     </div>
-                    <div class="hero-card hero-card-moto">
-                        <h3>Motos Revisadas</h3>
-                        <p><strong>Garantia de 3 meses</strong> com motor e caixa de marcha incluso. Na compra de um veículo, o <strong>DUT eletrônico</strong> fica por nossa conta.</p>
+                    <!-- Cards informativos abaixo do 3D -->
+                    <div class="hero-3d-cards">
+                        <div class="hero-card hero-card-car">
+                            <h3>Carros selecionados</h3>
+                            <p>Hatches, sedãs, SUVs e utilitários para todos os perfis.</p>
+                        </div>
+                        <div class="hero-card hero-card-moto">
+                            <h3>Motos Revisadas</h3>
+                            <p><strong>Garantia de 3 meses</strong> com motor e caixa de marcha incluso. Na compra de um veículo, o <strong>DUT eletrônico</strong> fica por nossa conta.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -553,7 +564,7 @@
                 </article>
 
                  <article class="vehicle-card" data-type="carro">
-                     <div class="vehicle-badge badge-moto">Carro</div>
+                     <div class="vehicle-badge badge-car">Carro</div>
                     <div class="vehicle-image" data-image="Imagens otimizadas/Imagens motos/412.webp" data-images="Imagens otimizadas/Imagens motos/412.webp, Imagens otimizadas/Imagens motos/411.webp, Imagens otimizadas/Imagens motos/410.webp, Imagens otimizadas/Imagens motos/409.webp, Imagens otimizadas/Imagens motos/408.webp, Imagens otimizadas/Imagens motos/407.webp, Imagens otimizadas/Imagens motos/406.webp, Imagens otimizadas/Imagens motos/405.webp, Imagens otimizadas/Imagens motos/403.webp, Imagens otimizadas/Imagens motos/404.webp" data-fallback-class="vehicle-image-moto-3"></div>
                     <div class="vehicle-body">
                          <h3>FIAT UNO 1.0 VIVACE</h3>
@@ -848,7 +859,7 @@
                             <noscript>
                                 <p style="margin-top:8px;font-size:0.9rem;">Se o JavaScript estiver desativado, abra diretamente o WhatsApp pelo link: <a href="https://wa.me/5585986114901" target="_blank" rel="noopener noreferrer" style="text-decoration: underline;">https://wa.me/5585986114901</a>.</p>
                             </noscript>
-                            <small class="form-note">Ao enviar, você concorda em ser contatado pela Veneza Motos e Veículos<a href="politica-privacidade.html" style="text-decoration: underline;">Política de Privacidade</a>.</small>
+                            <small class="form-note">Ao enviar, você concorda em ser contatado pela Veneza Motos e Veículos. <a href="politica-privacidade.html" style="text-decoration: underline;">Política de Privacidade</a>.</small>
                         </form>
                     </div>
                 </div>
@@ -1072,6 +1083,8 @@
 <script src="https://unpkg.com/feather-icons@4.29.2/dist/feather.min.js" crossorigin="anonymous"></script>
 <script src="script.js"></script>
 <script src="intro.js"></script>
+<!-- Moto 3D interativa -->
+<script defer src="moto3d.js"></script>
 </body>
 </html>
 

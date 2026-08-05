@@ -5,8 +5,8 @@
     --secondary: #020617;
     --background: #f8fafc;
     --background-alt: #eef2ff;
-    --text: #000000;
-    --muted: #000000;
+    --text: #0f172a;
+    --muted: #6b7280;
     --white: #ffffff;
     --border: #e2e8f0;
     --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.14);
@@ -120,6 +120,8 @@ button {
     display: flex;
     flex-direction: column;
     line-height: 1.1;
+    flex-shrink: 0;
+    text-decoration: none;
 }
 
 .logo-main {
@@ -128,6 +130,7 @@ button {
     color: var(--primary);
     letter-spacing: 0.05em;
     text-transform: uppercase;
+    white-space: nowrap;
 }
 
 .logo-sub {
@@ -135,6 +138,7 @@ button {
     color: var(--primary);
     text-transform: uppercase;
     letter-spacing: 0.08em;
+    white-space: nowrap;
 }
 
 .nav-links {
@@ -301,7 +305,136 @@ button {
 
 .hero-image {
     display: grid;
-    gap: 16px;
+    gap: 14px;
+}
+
+/* ===== 3D Motorcycle Hero ===== */
+.hero-3d-container {
+    position: relative;
+    width: 100%;
+    height: 360px;
+    border-radius: 24px;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 55%,
+        rgba(29, 78, 216, 0.13) 0%,
+        rgba(14, 24, 58, 0.07) 65%,
+        transparent 100%);
+    border: 1px solid rgba(29, 78, 216, 0.20);
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    /* sombra suave de profundidade */
+    box-shadow:
+        0 8px 32px rgba(29, 78, 216, 0.12),
+        0 2px 8px rgba(15, 23, 42, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.hero-3d-container:active {
+    cursor: grabbing;
+}
+
+.hero-3d-container canvas {
+    border-radius: 24px;
+}
+
+/* hint "Arraste para interagir" */
+.hero-3d-hint {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 23, 42, 0.58);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: rgba(255, 255, 255, 0.80);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.025em;
+    padding: 5px 14px;
+    border-radius: 999px;
+    pointer-events: none;
+    z-index: 10;
+    white-space: nowrap;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    transition: opacity 0.4s ease;
+}
+
+.hero-3d-hint--hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* animação auto-hide após 5s */
+.hero-3d-hint {
+    animation: fadeHeroHint 0.45s ease 5s forwards;
+}
+
+@keyframes fadeHeroHint {
+    to { opacity: 0; }
+}
+
+/* cards abaixo do 3D */
+.hero-3d-cards {
+    display: grid;
+    gap: 12px;
+}
+
+/* dark mode */
+body[data-theme="dark"] .hero-3d-container {
+    background: radial-gradient(ellipse at 50% 55%,
+        rgba(29, 78, 216, 0.18) 0%,
+        rgba(2, 6, 23, 0.25) 65%,
+        transparent 100%);
+    border-color: rgba(29, 78, 216, 0.30);
+    box-shadow:
+        0 8px 36px rgba(29, 78, 216, 0.20),
+        0 2px 12px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(147, 197, 253, 0.08);
+}
+
+/* ===== responsive 3D hero ===== */
+@media (max-width: 1024px) {
+    .hero-3d-container {
+        height: 320px;
+    }
+}
+
+@media (max-width: 900px) {
+    .hero-3d-container {
+        height: 300px;
+    }
+    .hero-3d-cards {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .hero-3d-container {
+        height: 260px;
+        border-radius: 18px;
+    }
+    .hero-3d-hint {
+        font-size: 0.65rem;
+        padding: 4px 11px;
+        bottom: 10px;
+    }
+    .hero-3d-cards {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 400px) {
+    .hero-3d-container {
+        height: 230px;
+    }
+    .hero-3d-cards {
+        grid-template-columns: 1fr;
+    }
 }
 
 .hero-card {
@@ -323,6 +456,21 @@ button {
 .hero-card h3 {
     margin: 0 0 8px;
     font-size: 1.1rem;
+}
+
+/* Cards menores dentro do 3D hero */
+.hero-3d-cards .hero-card {
+    padding: 14px 16px;
+}
+
+.hero-3d-cards .hero-card h3 {
+    font-size: 0.98rem;
+    margin-bottom: 4px;
+}
+
+.hero-3d-cards .hero-card p {
+    font-size: 0.82rem;
+    line-height: 1.4;
 }
 
 .hero-card p {
@@ -628,9 +776,10 @@ button {
 
 .filters {
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
     flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 18px;
 }
 
 .filter-button {
@@ -653,14 +802,6 @@ button {
     border-color: transparent;
     box-shadow: 0 3px 12px rgba(37, 99, 235, 0.3);
     transform: translateY(-1px);
-}
-
-.filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 18px;
 }
 
 .vehicle-card {
@@ -1417,7 +1558,6 @@ body[data-theme="dark"] .btn-secondary:hover {
 
     .navbar-content {
         gap: 12px;
-        flex-wrap: wrap;
     }
 
     .nav-links {
@@ -1485,6 +1625,13 @@ body[data-theme="dark"] .btn-secondary:hover {
 @media (max-width: 480px) {
     .navbar-content {
         padding: 10px 0;
+    }
+    .logo-main {
+        font-size: 1.15rem;
+    }
+    .logo-sub {
+        font-size: 0.72rem;
+        letter-spacing: 0.05em;
     }
     .nav-links {
         gap: 10px;
@@ -2126,31 +2273,23 @@ body[data-theme="dark"] .section-header p {
 .reveal-d4 { transition-delay: 0.32s; }
 
 /* ===========================================
-   MOBILE CATALOG GRID: 2 COLUNAS EM CELULAR
+   MOBILE CATALOG GRID: COLUNA ÚNICA COM IMAGENS GRANDES
    =========================================== */
 @media (max-width: 640px) {
     .catalog-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
+        grid-template-columns: 1fr;
+        gap: 16px;
     }
     .catalog-card-image {
-        height: clamp(150px, 44vw, 200px);
+        height: clamp(220px, 60vw, 320px);
     }
     .catalog-card-body {
-        padding: 10px 11px 12px;
-        gap: 2px;
+        padding: 14px 16px 16px;
+        gap: 4px;
     }
-    .catalog-card-body h3 { font-size: 0.84rem; }
-    .catalog-meta { font-size: 0.7rem; }
-    .catalog-price { font-size: 0.93rem; }
-    .catalog-tag {
-        font-size: 0.66rem;
-        padding: 2px 8px;
-    }
-}
-
-@media (max-width: 380px) {
-    .catalog-grid { grid-template-columns: 1fr; }
+    .catalog-card-body h3 { font-size: 1rem; }
+    .catalog-meta { font-size: 0.78rem; }
+    .catalog-price { font-size: 1.1rem; }
 }
 
 /* ===========================================
@@ -2743,10 +2882,10 @@ body[data-theme="dark"] .hero-trust { border-top-color: rgba(31,41,55,0.6); }
 /* Imagens de veículos: tamanho mínimo mais confortável */
 @media (max-width: 480px) {
     .vehicle-image {
-        height: clamp(200px, 58vw, 260px);
+        height: clamp(210px, 60vw, 280px);
     }
     .catalog-card-image {
-        height: clamp(160px, 48vw, 200px);
+        height: clamp(200px, 58vw, 280px);
     }
 }
 

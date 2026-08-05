@@ -8,6 +8,7 @@
     /* ── State ───────────────────────────────────── */
     var dismissed = false;
     var raf;
+    var onKeyDismiss = null;
 
     /* ── DOM ─────────────────────────────────────── */
     var overlay  = document.getElementById('intro-overlay');
@@ -117,6 +118,7 @@
     function dismiss() {
         if (dismissed) return;
         dismissed = true;
+        if (onKeyDismiss) document.removeEventListener('keydown', onKeyDismiss);
         cancelAnimationFrame(raf);
         overlay.classList.add('hide');
         overlay.addEventListener('animationend', function () {
@@ -143,9 +145,10 @@
         if (skipBtn) skipBtn.addEventListener('click', dismiss);
 
         // keyboard: Enter or Space
-        document.addEventListener('keydown', function(e) {
+        onKeyDismiss = function(e) {
             if (e.key === 'Enter' || e.key === ' ') dismiss();
-        });
+        };
+        document.addEventListener('keydown', onKeyDismiss);
 
         // auto-dismiss
         setTimeout(dismiss, DURATION);
