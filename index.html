@@ -90,7 +90,8 @@
     </div>
     <!-- ===== /INTRO ===== -->
 
-    <nav class="navbar">
+    <header class="site-header">
+    <nav class="navbar" aria-label="Navegação principal">
         <div class="container navbar-content">
             <div class="logo">
                 <span class="logo-main">Veneza</span>
@@ -102,7 +103,7 @@
                 <li><a href="#catalogo">Catálogo</a></li>
                 <li><a href="#servicos">Serviços</a></li>
                 <li><a href="#sobre">Sobre</a></li>
-                <li><a href="midias-sociais.html">Redes sociais</a></li>
+                <li><a href="#redes-sociais">Redes sociais</a></li>
                 <li><a href="#contato">Contato</a></li>
             </ul>
             <button class="btn-outline theme-toggle" type="button" data-role="theme-toggle">
@@ -118,9 +119,10 @@
             </button>
         </div>
     </nav>
+    </header>
 
     <!-- ===== Mobile Navigation Drawer ===== -->
-    <div class="mobile-nav" id="mobile-nav" aria-hidden="true">
+    <nav class="mobile-nav" id="mobile-nav" aria-hidden="true" aria-label="Navegação móvel">
         <div class="mobile-nav-header">
             <div class="logo">
                 <span class="logo-main">Veneza</span>
@@ -136,7 +138,7 @@
             <li><a href="#catalogo">Catálogo</a></li>
             <li><a href="#servicos">Serviços</a></li>
             <li><a href="#sobre">Sobre</a></li>
-            <li><a href="midias-sociais.html">Redes sociais</a></li>
+            <li><a href="#redes-sociais">Redes sociais</a></li>
             <li><a href="#contato">Contato</a></li>
         </ul>
         <div class="mobile-nav-footer">
@@ -147,14 +149,14 @@
                 WhatsApp
             </a>
         </div>
-    </div>
+    </nav>
     <div class="mobile-nav-backdrop" id="mobile-nav-backdrop"></div>
 
     <main>
         <section id="inicio" class="hero">
             <div class="container hero-content">
                 <div class="hero-text">
-                    <h1 style="color: rgb(0, 102, 255);">Veneza Motos e Veículos</h1>
+                    <h1>Veneza Motos e Veículos</h1>
                     <p>Seu próximo carro ou moto está aqui. Seminovos revisados, garantia de procedência e condições especiais de financiamento.</p>
                     <div class="hero-actions">
                         <button class="btn-primary" type="button" data-scroll-target="estoque">Ver estoque</button>
@@ -205,7 +207,7 @@
         </section>
 
         <!-- ===== STATS BAR ===== -->
-        <div class="stats-bar" role="region" aria-label="Números da Veneza Motos">
+        <section class="stats-bar" aria-label="Números da Veneza Motos">
             <div class="container stats-inner">
                 <div class="stat-item">
                     <strong class="stat-number" data-target="1000" data-suffix="+">1000+</strong>
@@ -227,7 +229,7 @@
                     <span class="stat-label">No financiamento</span>
                 </div>
             </div>
-        </div>
+        </section>
         <!-- ===== /STATS BAR ===== -->
 
         <section id="catalogo" class="section catalog-section">
@@ -910,6 +912,47 @@
             </div>
         </section>
 
+        <!-- ===== REDES SOCIAIS ===== -->
+        <section id="redes-sociais" class="section section-alt social-section" aria-labelledby="social-title">
+            <div class="container">
+                <header class="section-header">
+                    <h2 id="social-title">Siga a Veneza nas redes</h2>
+                    <p>Motos chegando, bastidores das entregas e ofertas exclusivas para quem acompanha a loja.</p>
+                </header>
+                <div class="social-grid">
+                    <a class="social-card social-card-instagram" href="https://www.instagram.com/venezamotoseveiculos_ofc" target="_blank" rel="noopener noreferrer">
+                        <img loading="lazy" src="Imagens rede social/instagram logo.webp" alt="" width="64" height="64">
+                        <h3>Instagram</h3>
+                        <span class="social-handle">@venezamotoseveiculos_ofc</span>
+                        <p>Stories novos, bastidores das entregas e reels das motos em movimento.</p>
+                        <span class="social-cta">Seguir</span>
+                    </a>
+                    <a class="social-card social-card-facebook" href="https://www.facebook.com/veneza.veiculos.1" target="_blank" rel="noopener noreferrer">
+                        <img loading="lazy" src="Imagens rede social/Facebook logo.webp" alt="" width="64" height="64">
+                        <h3>Facebook</h3>
+                        <span class="social-handle">Veneza Motos Veiculos</span>
+                        <p>Álbuns de fotos dos veículos e eventos na loja com novas oportunidades.</p>
+                        <span class="social-cta">Curtir página</span>
+                    </a>
+                    <a class="social-card social-card-tiktok" href="https://www.tiktok.com/@venezamotoseveiculos" target="_blank" rel="noopener noreferrer">
+                        <img loading="lazy" src="Imagens rede social/tik tok logo.webp" alt="" width="64" height="64">
+                        <h3>TikTok</h3>
+                        <span class="social-handle">@venezamotoseveiculos</span>
+                        <p>Vídeos curtos das motos chegando na loja, bastidores e ofertas surpresa.</p>
+                        <span class="social-cta">Assistir</span>
+                    </a>
+                    <a class="social-card social-card-whatsapp" href="https://wa.me/5585986114901?text=Ol%C3%A1%2C+tenho+interesse+em+um+ve%C3%ADculo+da+Veneza+Motos+e+Ve%C3%ADculos." target="_blank" rel="noopener noreferrer">
+                        <img loading="lazy" src="Imagens rede social/whatsapp logo.webp" alt="" width="64" height="64">
+                        <h3>WhatsApp</h3>
+                        <span class="social-handle">(85) 98611-4901</span>
+                        <p>Atendimento rápido para tirar dúvidas e negociar o seu novo veículo.</p>
+                        <span class="social-cta">Chamar agora</span>
+                    </a>
+                </div>
+                <p class="social-more"><a href="midias-sociais.html">Ver a página completa de redes sociais →</a></p>
+            </div>
+        </section>
+
         <section id="contato" class="section section-alt">
             <div class="container contact-grid">
                 <div>
@@ -1083,8 +1126,8 @@
 <script src="https://unpkg.com/feather-icons@4.29.2/dist/feather.min.js" crossorigin="anonymous"></script>
 <script src="script.js"></script>
 <script src="intro.js"></script>
-<!-- Moto 3D interativa -->
-<script defer src="moto3d.js"></script>
+<!-- Moto 3D interativa (Three.js vendorizado em /vendor) -->
+<script type="module" src="moto3d.js"></script>
 </body>
 </html>
 

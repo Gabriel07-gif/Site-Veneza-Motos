@@ -121,10 +121,16 @@
         if (onKeyDismiss) document.removeEventListener('keydown', onKeyDismiss);
         cancelAnimationFrame(raf);
         overlay.classList.add('hide');
-        overlay.addEventListener('animationend', function () {
+        // dispara as animações de entrada da hero (styles.css: body.intro-done)
+        document.body.classList.add('intro-done');
+        var cleanup = function () {
             overlay.style.display = 'none';
             document.body.style.overflow = '';
-        }, { once: true });
+        };
+        overlay.addEventListener('animationend', cleanup, { once: true });
+        // segurança: se a animação de saída não disparar (ex.: reduced motion),
+        // garante que o scroll é restaurado na mesma
+        setTimeout(cleanup, 1200);
     }
 
     /* ── Init ────────────────────────────────────── */

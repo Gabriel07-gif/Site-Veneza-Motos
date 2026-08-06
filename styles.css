@@ -96,10 +96,13 @@ button {
     font-weight: 500;
 }
 
-.navbar {
+.site-header {
     position: sticky;
     top: 0;
     z-index: 10;
+}
+
+.navbar {
     background: rgba(255, 255, 255, 0.94);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
@@ -177,7 +180,20 @@ button {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: background 0.2s ease, color 0.2s ease, transform 0.1s ease, box-shadow 0.1s ease;
+    transition: background 0.25s ease, color 0.25s ease, transform 0.18s ease, box-shadow 0.25s ease;
+}
+
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible,
+.btn-outline:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.45);
+    outline-offset: 2px;
+}
+
+.btn-primary:active,
+.btn-secondary:active,
+.btn-outline:active {
+    transform: scale(0.97);
 }
 
 .btn-primary {
@@ -189,8 +205,8 @@ button {
 
 .btn-primary:hover {
     background: linear-gradient(135deg, #1d4ed8, #1e40af);
-    transform: translateY(-1px);
-    box-shadow: 0 8px 28px rgba(30, 64, 175, 0.44), 0 2px 6px rgba(30, 64, 175, 0.22);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 32px rgba(30, 64, 175, 0.40), 0 2px 6px rgba(30, 64, 175, 0.22);
 }
 
 .btn-outline {
@@ -202,6 +218,19 @@ button {
 .btn-outline:hover {
     background: var(--secondary);
     color: var(--white);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.18);
+}
+
+body[data-theme="dark"] .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border-color: rgba(148, 163, 184, 0.45);
+}
+
+body[data-theme="dark"] .btn-outline:hover {
+    background: rgba(148, 163, 184, 0.16);
+    color: var(--text);
 }
 
 .btn-secondary {
@@ -254,9 +283,9 @@ button {
 .hero {
     padding: 60px 0 80px;
     background:
-        radial-gradient(ellipse at top left, rgba(37, 99, 235, 0.22) 0, transparent 52%),
-        radial-gradient(ellipse at bottom right, rgba(29, 78, 216, 0.09) 0, transparent 50%),
-        linear-gradient(165deg, #f0f7ff 0%, #e8effe 45%, #dce8ff 100%);
+        radial-gradient(ellipse at top left, rgba(37, 99, 235, 0.14) 0, transparent 55%),
+        radial-gradient(ellipse at bottom right, rgba(29, 78, 216, 0.07) 0, transparent 52%),
+        linear-gradient(165deg, #f4f9ff 0%, #edf2fe 45%, #e4edff 100%);
 }
 
 .hero-content {
@@ -267,16 +296,18 @@ button {
 }
 
 .hero-text h1 {
-    font-size: 2.85rem;
+    font-size: clamp(1.7rem, 1rem + 3.2vw, 2.85rem);
     line-height: 1.08;
     margin: 0 0 16px;
-    color: #0f172a;
+    color: var(--primary);
+    letter-spacing: -0.015em;
 }
 
 .hero-text p {
     margin: 0 0 20px;
     color: var(--muted);
-    font-size: 1rem;
+    font-size: clamp(0.95rem, 0.9rem + 0.3vw, 1.05rem);
+    line-height: 1.6;
     max-width: 520px;
 }
 
@@ -293,8 +324,49 @@ button {
     margin: 0;
     display: grid;
     gap: 6px;
-    color: #4b5563;
+    color: var(--muted);
     font-size: 0.95rem;
+}
+
+/* ===== Animações de entrada da hero (fade-in + slide-up) =====
+   Disparam quando o intro adiciona body.intro-done, para não
+   terminarem escondidas atrás do splash. */
+@media (prefers-reduced-motion: no-preference) {
+    body.intro-done .hero-text h1,
+    body.intro-done .hero-text p,
+    body.intro-done .hero-actions,
+    body.intro-done .hero-highlights,
+    body.intro-done .hero-trust,
+    body.intro-done .hero-image {
+        animation: heroEnter 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    body.intro-done .hero-text p     { animation-delay: 0.1s; }
+    body.intro-done .hero-actions    { animation-delay: 0.2s; }
+    body.intro-done .hero-highlights { animation-delay: 0.3s; }
+    body.intro-done .hero-trust      { animation-delay: 0.4s; }
+    body.intro-done .hero-image      { animation-delay: 0.25s; }
+
+    /* flutuação suave do contentor 3D — a moto parece suspensa */
+    .hero-3d-container {
+        animation: heroFloat 6s ease-in-out infinite;
+    }
+}
+
+@keyframes heroEnter {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes heroFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
 }
 
 .hero-highlights li::before {
@@ -308,34 +380,78 @@ button {
     gap: 14px;
 }
 
-/* ===== 3D Motorcycle Hero ===== */
+/* ===== 3D Motorcycle Hero =====
+   Sem caixa: a moto flutua livre sobre o degradê da hero.
+   Só um glow suave atrás e uma sombra de contacto no chão. */
 .hero-3d-container {
     position: relative;
     width: 100%;
-    height: 440px;
-    border-radius: 24px;
-    overflow: hidden;
-    background: radial-gradient(ellipse at 50% 55%,
-        rgba(29, 78, 216, 0.13) 0%,
-        rgba(14, 24, 58, 0.07) 65%,
-        transparent 100%);
-    border: 1px solid rgba(29, 78, 216, 0.20);
+    height: clamp(300px, 24vw + 160px, 440px);
     cursor: grab;
     user-select: none;
     -webkit-user-select: none;
-    /* sombra suave de profundidade */
-    box-shadow:
-        0 8px 32px rgba(29, 78, 216, 0.12),
-        0 2px 8px rgba(15, 23, 42, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    touch-action: pan-y;
 }
 
 .hero-3d-container:active {
     cursor: grabbing;
 }
 
-.hero-3d-container canvas {
-    border-radius: 24px;
+/* glow suave por trás do modelo */
+.hero-3d-container::before {
+    content: "";
+    position: absolute;
+    inset: 16% 10%;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center,
+        rgba(59, 130, 246, 0.18) 0%,
+        rgba(29, 78, 216, 0.07) 55%,
+        transparent 75%);
+    pointer-events: none;
+    filter: blur(8px);
+}
+
+/* sombra elíptica de contacto sob a moto */
+.hero-3d-container::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 7%;
+    width: 62%;
+    height: 7%;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center,
+        rgba(15, 23, 42, 0.30) 0%,
+        rgba(15, 23, 42, 0.12) 55%,
+        transparent 78%);
+    pointer-events: none;
+    filter: blur(4px);
+}
+
+.hero-3d-container canvas,
+.hero-3d-canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    position: relative;
+    z-index: 1;
+}
+
+/* fallback quando WebGL não está disponível */
+.hero-3d-fallback {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 6%;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+}
+
+body[data-theme="dark"] .hero-3d-fallback {
+    mix-blend-mode: normal;
 }
 
 /* hint "Arraste para interagir" */
@@ -384,65 +500,49 @@ button {
 }
 
 /* dark mode */
-body[data-theme="dark"] .hero-3d-container {
-    background: radial-gradient(ellipse at 50% 55%,
-        rgba(29, 78, 216, 0.18) 0%,
-        rgba(2, 6, 23, 0.25) 65%,
-        transparent 100%);
-    border-color: rgba(29, 78, 216, 0.30);
-    box-shadow:
-        0 8px 36px rgba(29, 78, 216, 0.20),
-        0 2px 12px rgba(0, 0, 0, 0.35),
-        inset 0 1px 0 rgba(147, 197, 253, 0.08);
+body[data-theme="dark"] .hero-3d-container::before {
+    background: radial-gradient(ellipse at center,
+        rgba(59, 130, 246, 0.22) 0%,
+        rgba(29, 78, 216, 0.09) 55%,
+        transparent 75%);
 }
 
-/* ===== responsive 3D hero ===== */
-@media (max-width: 1024px) {
-    .hero-3d-container {
-        height: 390px;
-    }
+body[data-theme="dark"] .hero-3d-container::after {
+    background: radial-gradient(ellipse at center,
+        rgba(0, 0, 0, 0.55) 0%,
+        rgba(0, 0, 0, 0.22) 55%,
+        transparent 78%);
 }
 
-@media (max-width: 900px) {
-    .hero-3d-container {
-        height: 350px;
-    }
-    .hero-3d-cards {
-        grid-template-columns: 1fr 1fr;
-    }
-}
-
-@media (max-width: 640px) {
-    .hero-3d-container {
-        height: 300px;
-        border-radius: 18px;
-    }
-    .hero-3d-hint {
-        font-size: 0.65rem;
-        padding: 4px 11px;
-        bottom: 10px;
-    }
-    .hero-3d-cards {
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-    }
-}
-
-@media (max-width: 400px) {
-    .hero-3d-container {
-        height: 260px;
-    }
-    .hero-3d-cards {
-        grid-template-columns: 1fr;
-    }
-}
+/* (media queries da hero consolidadas no fim do ficheiro:
+   secção "HERO — responsivo consolidado") */
 
 .hero-card {
-    background: var(--white);
+    background: rgba(255, 255, 255, 0.55);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
     border-radius: 20px;
     padding: 20px;
-    box-shadow: var(--shadow-soft);
-    border: 1px solid rgba(148, 163, 184, 0.25);
+    box-shadow: 0 20px 50px rgba(29, 78, 216, 0.10), 0 2px 8px rgba(15, 23, 42, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .hero-card {
+        background: rgba(255, 255, 255, 0.92);
+    }
+}
+
+body[data-theme="dark"] .hero-card {
+    background: rgba(15, 23, 42, 0.55);
+    border-color: rgba(148, 163, 184, 0.22);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    body[data-theme="dark"] .hero-card {
+        background: rgba(15, 23, 42, 0.94);
+    }
 }
 
 .hero-card-car {
@@ -1450,7 +1550,10 @@ body[data-theme="dark"] .logo-sub {
 }
 
 body[data-theme="dark"] .hero {
-    background: radial-gradient(circle at top left, #020617 0, transparent 45%), linear-gradient(to bottom, #020617, #020617);
+    background:
+        radial-gradient(ellipse at top left, rgba(29, 78, 216, 0.14) 0, transparent 50%),
+        radial-gradient(ellipse at bottom right, rgba(29, 78, 216, 0.08) 0, transparent 52%),
+        linear-gradient(180deg, #020617 0%, #050b22 100%);
 }
 
 body[data-theme="dark"] .section,
@@ -1459,7 +1562,6 @@ body[data-theme="dark"] .catalog-section {
     background: #020617;
 }
 
-body[data-theme="dark"] .hero-card,
 body[data-theme="dark"] .catalog-filters,
 body[data-theme="dark"] .catalog-card,
 body[data-theme="dark"] .vehicle-card,
@@ -1542,14 +1644,6 @@ body[data-theme="dark"] .btn-secondary:hover {
 
 
 @media (max-width: 900px) {
-    .hero-content {
-        grid-template-columns: 1fr;
-    }
-
-    .hero {
-        padding-top: 32px;
-    }
-
     .about-grid,
     .contact-grid,
     .catalog-layout {
@@ -1591,9 +1685,6 @@ body[data-theme="dark"] .btn-secondary:hover {
 }
 
 @media (max-width: 768px) {
-    .hero-text h1 {
-        font-size: 2rem;
-    }
     .catalog-card-image {
         height: clamp(220px, 56vw, 280px);
     }
@@ -1636,14 +1727,6 @@ body[data-theme="dark"] .btn-secondary:hover {
     .nav-links {
         gap: 10px;
         font-size: 0.85rem;
-    }
-    .hero-actions {
-        width: 100%;
-    }
-    .hero-actions .btn-primary,
-    .hero-actions .btn-outline {
-        width: 100%;
-        justify-content: center;
     }
     .catalog-card-body h3 {
         font-size: 0.95rem;
@@ -1998,10 +2081,6 @@ body[data-theme="dark"] .section-header p {
         gap: 2px;
     }
 
-    .hero-actions {
-        flex-direction: column;
-    }
-
     .grid {
         grid-template-columns: 1fr;
     }
@@ -2293,15 +2372,6 @@ body[data-theme="dark"] .section-header p {
 }
 
 /* ===========================================
-   MOBILE HERO & TYPOGRAPHY IMPROVEMENTS
-   =========================================== */
-@media (max-width: 640px) {
-    .hero { padding: 36px 0 52px; }
-    .hero-text h1 { font-size: 1.9rem; }
-    .hero-highlights { font-size: 0.88rem; }
-}
-
-/* ===========================================
    MOBILE VEHICLE GRID: FULL WIDTH
    =========================================== */
 @media (max-width: 640px) {
@@ -2346,45 +2416,6 @@ body[data-theme="dark"] .filter-toggle-btn:hover {
     background: rgba(255,255,255,0.22);
     vertical-align: middle;
     flex-shrink: 0;
-}
-
-/* ===========================================
-   HERO BADGE / STATUS
-   =========================================== */
-.hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    background: linear-gradient(135deg, rgba(37,99,235,0.1), rgba(37,99,235,0.04));
-    border: 1.5px solid rgba(37,99,235,0.28);
-    border-radius: 999px;
-    padding: 5px 14px 5px 10px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: var(--primary);
-    margin-bottom: 16px;
-}
-
-.hero-badge-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #22c55e;
-    flex-shrink: 0;
-    animation: heroDotPulse 1.8s ease-in-out infinite;
-}
-
-@keyframes heroDotPulse {
-    0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
-    50% { opacity: 0.6; transform: scale(0.8); box-shadow: 0 0 0 5px rgba(34,197,94,0); }
-}
-
-body[data-theme="dark"] .hero-badge {
-    background: rgba(37,99,235,0.12);
-    border-color: rgba(37,99,235,0.35);
-    color: #93c5fd;
 }
 
 /* ===========================================
@@ -2767,7 +2798,7 @@ body[data-theme="dark"] .testimonial-info span { color: #6b7280; }
     gap: 7px;
     font-size: 0.82rem;
     font-weight: 600;
-    color: #000000;
+    color: var(--text);
 }
 
 .hero-trust-item svg {
@@ -2840,22 +2871,6 @@ body[data-theme="dark"] .hero-trust { border-top-color: rgba(31,41,55,0.6); }
 /* ===========================================
    RESPONSIVIDADE — MELHORIAS GERAIS
    =========================================== */
-
-/* Hero: botões mobile com largura total */
-@media (max-width: 480px) {
-    .hero-text h1 {
-        font-size: 1.7rem;
-    }
-    .hero {
-        padding: 28px 0 40px;
-    }
-    .hero-trust {
-        gap: 10px;
-    }
-    .hero-trust-item {
-        font-size: 0.78rem;
-    }
-}
 
 /* Seção sobre: grid responsivo */
 @media (max-width: 640px) {
@@ -2973,5 +2988,215 @@ body[data-theme="dark"] .dev-credit-name {
 @media (max-width: 640px) {
     .footer-dev {
         font-size: 0.75rem;
+    }
+}
+
+/* ===========================================
+   HERO — responsivo consolidado (mobile-first)
+   Única fonte de verdade para o comportamento
+   responsivo da hero. As alturas do contentor
+   3D são fluidas via clamp() na regra base.
+   Ordem mobile: título+CTA → canvas 3D
+   (largura total) → cartões de informação.
+   =========================================== */
+@media (max-width: 900px) {
+    .hero {
+        padding-top: 32px;
+    }
+    .hero-content {
+        grid-template-columns: 1fr;
+    }
+    .hero-3d-cards {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .hero {
+        padding: 36px 0 52px;
+    }
+    .hero-highlights {
+        font-size: 0.88rem;
+    }
+    .hero-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    .hero-actions .btn-primary,
+    .hero-actions .btn-outline {
+        width: 100%;
+        justify-content: center;
+    }
+    .hero-3d-hint {
+        font-size: 0.65rem;
+        padding: 4px 11px;
+        bottom: 10px;
+    }
+    .hero-3d-cards {
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero {
+        padding: 28px 0 40px;
+    }
+    .hero-trust {
+        gap: 10px;
+    }
+    .hero-trust-item {
+        font-size: 0.78rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .hero-3d-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===========================================
+   REDES SOCIAIS — secção do index
+   =========================================== */
+.social-section {
+    background:
+        radial-gradient(ellipse at top right, rgba(37, 99, 235, 0.08) 0, transparent 55%),
+        var(--background-alt);
+}
+
+.social-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+.social-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 22px 20px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.55);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    box-shadow: 0 20px 50px rgba(29, 78, 216, 0.08), 0 2px 8px rgba(15, 23, 42, 0.05);
+    text-decoration: none;
+    color: var(--text);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .social-card {
+        background: rgba(255, 255, 255, 0.92);
+    }
+}
+
+.social-card:hover,
+.social-card:focus-visible {
+    transform: translateY(-4px);
+    box-shadow: 0 26px 60px rgba(29, 78, 216, 0.16), 0 4px 12px rgba(15, 23, 42, 0.08);
+    border-color: rgba(59, 130, 246, 0.45);
+}
+
+.social-card:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.45);
+    outline-offset: 2px;
+}
+
+.social-card img {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    object-fit: contain;
+    transition: transform 0.25s ease;
+}
+
+.social-card:hover img {
+    transform: scale(1.08);
+}
+
+.social-card h3 {
+    margin: 4px 0 0;
+    font-size: 1.05rem;
+    color: var(--text);
+}
+
+.social-handle {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--primary);
+    word-break: break-all;
+}
+
+.social-card p {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--muted);
+}
+
+.social-cta {
+    margin-top: auto;
+    padding-top: 8px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.social-card:hover .social-cta {
+    text-decoration: underline;
+}
+
+.social-more {
+    margin: 22px 0 0;
+    text-align: center;
+}
+
+.social-more a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.social-more a:hover {
+    text-decoration: underline;
+}
+
+body[data-theme="dark"] .social-section {
+    background:
+        radial-gradient(ellipse at top right, rgba(29, 78, 216, 0.12) 0, transparent 55%),
+        #020617;
+}
+
+body[data-theme="dark"] .social-card {
+    background: rgba(15, 23, 42, 0.55);
+    border-color: rgba(148, 163, 184, 0.22);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    body[data-theme="dark"] .social-card {
+        background: rgba(15, 23, 42, 0.94);
+    }
+}
+
+body[data-theme="dark"] .social-handle,
+body[data-theme="dark"] .social-cta,
+body[data-theme="dark"] .social-more a {
+    color: #93c5fd;
+}
+
+@media (max-width: 1024px) {
+    .social-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 520px) {
+    .social-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
     }
 }
