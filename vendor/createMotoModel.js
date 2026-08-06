@@ -232,6 +232,11 @@ function makeReferenceTextureSet(spec, options) {
   };
 }
 function makeProceduralTextureSet(id, spec, options) {
+  // Site: texturas canvas desativadas — o texturePalette foi contaminado pelo
+  // classificador (paletas cinza/castanhas) e pintava a moto toda de castanho.
+  // Sem texturas, createSculptMaterial usa a cor lisa correta do spec
+  // (clampedAlbedoColor) e o arranque poupa a geracao de 8 conjuntos de mapas.
+  return null;
   if (typeof document === "undefined") return null;
   const qualityFirst = (options.qualityPriority ?? "reference-fidelity") === "reference-fidelity";
   const requested = options.textureSize ?? spec.textureResolution;
