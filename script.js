@@ -463,6 +463,56 @@ function formatPhoneMask(value) {
     return `(${ddd}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
 }
 
+// Mini-vitrine da hero: roda os destaques a cada 5s e pausa em hover/foco.
+// Com prefers-reduced-motion a rotação mantém-se, mas sem crossfade (CSS).
+function initHeroShowcase() {
+    const showcase = document.querySelector("[data-hero-showcase]");
+    if (!showcase) return;
+    const slides = Array.from(showcase.querySelectorAll(".hero-showcase-slide"));
+    const dots = Array.from(showcase.querySelectorAll(".hero-showcase-dot"));
+    if (slides.length < 2) return;
+
+    let atual = 0;
+    let timer = 0;
+
+    const mostrar = (indice) => {
+        atual = (indice + slides.length) % slides.length;
+        slides.forEach((slide, i) => slide.classList.toggle("is-active", i === atual));
+        dots.forEach((dot, i) => dot.classList.toggle("is-active", i === atual));
+    };
+
+    const parar = () => {
+        if (timer) {
+            clearInterval(timer);
+            timer = 0;
+        }
+    };
+
+    const arrancar = () => {
+        if (timer) return;
+        timer = setInterval(() => mostrar(atual + 1), 5000);
+    };
+
+    dots.forEach((dot, i) => {
+        dot.addEventListener("click", () => {
+            mostrar(i);
+            parar();
+            arrancar();
+        });
+    });
+
+    showcase.addEventListener("mouseenter", parar);
+    showcase.addEventListener("mouseleave", arrancar);
+    showcase.addEventListener("focusin", parar);
+    showcase.addEventListener("focusout", arrancar);
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden) parar();
+        else arrancar();
+    });
+
+    arrancar();
+}
+
 function initSimulationFormConstraints() {
     const cpfInput = document.getElementById("cpf-financiamento");
     if (cpfInput) {
@@ -966,6 +1016,7 @@ document.addEventListener("DOMContentLoaded", () => {
     animateCounters();
     initScrollReveal();
     initFilterToggle();
+    initHeroShowcase();
     initSimulationFormConstraints();
     initContactFormConstraints();
     const simForm = document.getElementById("form-simulacao");
