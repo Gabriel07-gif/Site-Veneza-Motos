@@ -2,162 +2,337 @@
     'use strict';
 
     /* ── Config ──────────────────────────────────── */
-    var DURATION       = 3800;   // ms before auto-dismiss
-    var PARTICLE_COUNT = window.innerWidth <= 768 ? 25 : 55; // menos partículas no mobile
+    var SCENE_DURATION  = 2800; // ms per story scene (total ~8.4s max if un-tapped)
+    var TOTAL_SCENES    = 3;
+    var PARTICLE_COUNT  = window.innerWidth <= 768 ? 35 : 60;
 
     /* ── State ───────────────────────────────────── */
-    var dismissed = false;
-    var raf;
-    var onKeyDismiss = null;
+    var currentScene    = 0;
+    var sceneStartTime  = 0;
+    var progressRaf     = null;
+    var dismissed       = false;
+    var canvasRaf       = null;
+    var isAudioActive   = false;
+    var audioCtx        = null;
 
-    /* ── DOM ─────────────────────────────────────── */
-    var overlay  = document.getElementById('intro-overlay');
-    var canvas   = document.getElementById('intro-canvas');
-    var skipBtn  = document.getElementById('intro-skip');
+    /* Touch Gesture State */
+    var touchStartY     = 0;
+    var touchCurrentY   = 0;
+    var isSwiping       = false;
 
-    if (!overlay) return; // guard
+    /* ── DOM Elements ────────────────────────────── */
+    var overlay         = document.getElementById('intro-overlay');
+    var canvas          = document.getElementById('intro-canvas');
+    var skipBtn         = document.getElementById('intro-skip');
+    var enterBtn        = document.getElementById('intro-enter-btn');
+    var soundToggleBtn  = document.getElementById('intro-sound-toggle');
+    var tapPrev         = document.getElementById('story-tap-prev');
+    var tapNext         = document.getElementById('story-tap-next');
+    var swipeArea       = document.getElementById('intro-swipe-area');
 
-    /* ── Particle system (canvas) ────────────────── */
-    var ctx    = canvas.getContext('2d');
+    if (!overlay) return; // Guard
+
+    /* ── Audio Engine (Web Audio API Synthesizer) ── */
+    function initAudio() {
+        if (!audioCtx) {
+            var AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext) audioCtx = new AudioContext();
+        }
+    }
+
+    function playSoundEffect(type) {
+        if (!isAudioActive || !audioCtx) return;
+        try {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            var osc = audioCtx.createOscillator();
+            var gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            var now = audioCtx.currentTime;
+
+            if (type === 'tap') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(440, now);
+                osc.frequency.exponentialRampToValueAtTime(880, now + 0.12);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+                osc.start(now);
+                osc.stop(now + 0.12);
+            } else if (type === 'dismiss') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(220, now);
+                osc.frequency.exponentialRampToValueAtTime(880, now + 0.35);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+                osc.start(now);
+                osc.stop(now + 0.35);
+            }
+        } catch (e) {
+            // Audio context fallback
+        }
+    }
+
+    function toggleAudio() {
+        initAudio();
+        isAudioActive = !isAudioActive;
+        var soundOffIcon = soundToggleBtn ? soundToggleBtn.querySelector('.sound-off') : null;
+        var soundOnIcon = soundToggleBtn ? soundToggleBtn.querySelector('.sound-on') : null;
+
+        if (soundOffIcon && soundOnIcon) {
+            if (isAudioActive) {
+                soundOffIcon.style.display = 'none';
+                soundOnIcon.style.display = 'block';
+                playSoundEffect('tap');
+            } else {
+                soundOffIcon.style.display = 'block';
+                soundOnIcon.style.display = 'none';
+            }
+        }
+    }
+
+    /* ── Canvas Particle & Light System ─────────── */
+    var ctx = canvas ? canvas.getContext('2d') : null;
     var particles = [];
 
-    function resize() {
-        canvas.width  = window.innerWidth;
-        canvas.height = window.innerHeight;
+    function resizeCanvas() {
+        if (!canvas) return;
+        var rect = canvas.getBoundingClientRect();
+        canvas.width = (rect.width || window.innerWidth) * (window.devicePixelRatio || 1);
+        canvas.height = (rect.height || window.innerHeight) * (window.devicePixelRatio || 1);
+        if (ctx) ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
     }
 
     function rand(min, max) { return Math.random() * (max - min) + min; }
 
-    function createParticle() {
-        var size = rand(2, 7);
+    function createParticle(x, y, interactive) {
+        var width = canvas.width / (window.devicePixelRatio || 1);
+        var height = canvas.height / (window.devicePixelRatio || 1);
         return {
-            x:     rand(0, canvas.width),
-            y:     rand(canvas.height * 0.3, canvas.height + 60),
-            size:  size,
-            baseSize: size,
-            speedY: rand(0.4, 1.6),   // rises upward (negative Y)
-            speedX: rand(-0.3, 0.3),
-            opacity: rand(0.3, 0.9),
-            hue:   rand(200, 230),     // blue palette
-            wobble: rand(0, Math.PI * 2),
-            wobbleSpeed: rand(0.01, 0.025),
+            x: x !== undefined ? x : rand(0, width),
+            y: y !== undefined ? y : rand(height * 0.2, height + 40),
+            size: rand(2, interactive ? 8 : 5),
+            speedY: interactive ? rand(-3, 3) : rand(0.5, 2.2),
+            speedX: interactive ? rand(-3, 3) : rand(-0.4, 0.4),
+            opacity: rand(0.3, interactive ? 0.95 : 0.8),
+            hue: rand(200, 240), // Vibrant blue/cyan range
+            interactive: !!interactive,
+            life: interactive ? 1.0 : rand(0.4, 1.0)
         };
     }
 
     function initParticles() {
         particles = [];
         for (var i = 0; i < PARTICLE_COUNT; i++) {
-            var p = createParticle();
-            p.y = rand(0, canvas.height); // spread on first frame
-            particles.push(p);
+            particles.push(createParticle());
         }
     }
 
     function drawParticles() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (!ctx || !canvas) return;
+        var width = canvas.width / (window.devicePixelRatio || 1);
+        var height = canvas.height / (window.devicePixelRatio || 1);
+
+        ctx.clearRect(0, 0, width, height);
+
         for (var i = 0; i < particles.length; i++) {
             var p = particles[i];
-            p.wobble += p.wobbleSpeed;
-            p.x      += Math.sin(p.wobble) * 0.5 + p.speedX;
-            p.y      -= p.speedY;             // antigravity: float UP
-            p.opacity -= 0.0008;
+            p.x += p.speedX;
+            p.y -= p.speedY; // Rises upward
 
-            if (p.y < -20 || p.opacity <= 0) {
-                particles[i] = createParticle(); // respawn at bottom
+            if (p.interactive) {
+                p.opacity -= 0.02;
+            } else {
+                p.opacity -= 0.0015;
+            }
+
+            if (p.y < -20 || p.opacity <= 0 || p.x < -20 || p.x > width + 20) {
+                particles[i] = createParticle();
                 continue;
             }
 
-            // glow circle
-            var gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 2.5);
-            gradient.addColorStop(0,   'hsla(' + p.hue + ',85%,70%,' + p.opacity + ')');
-            gradient.addColorStop(0.5, 'hsla(' + p.hue + ',75%,60%,' + (p.opacity * 0.4) + ')');
-            gradient.addColorStop(1,   'hsla(' + p.hue + ',70%,50%,0)');
+            // Glow aura
+            var grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 3);
+            grad.addColorStop(0, 'hsla(' + p.hue + ', 90%, 75%, ' + p.opacity + ')');
+            grad.addColorStop(0.5, 'hsla(' + p.hue + ', 80%, 60%, ' + (p.opacity * 0.4) + ')');
+            grad.addColorStop(1, 'hsla(' + p.hue + ', 70%, 50%, 0)');
 
             ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size * 2.5, 0, Math.PI * 2);
-            ctx.fillStyle = gradient;
+            ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+            ctx.fillStyle = grad;
             ctx.fill();
 
-            // core dot
+            // Core dot
             ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size * 0.6, 0, Math.PI * 2);
-            ctx.fillStyle = 'hsla(' + p.hue + ',90%,90%,' + Math.min(p.opacity + 0.3, 1) + ')';
+            ctx.arc(p.x, p.y, p.size * 0.7, 0, Math.PI * 2);
+            ctx.fillStyle = 'hsla(' + p.hue + ', 100%, 95%, ' + Math.min(p.opacity + 0.2, 1) + ')';
             ctx.fill();
+        }
+
+        canvasRaf = requestAnimationFrame(drawParticles);
+    }
+
+    function addTouchSpark(x, y) {
+        if (!canvas) return;
+        var rect = canvas.getBoundingClientRect();
+        var localX = x - rect.left;
+        var localY = y - rect.top;
+        for (var i = 0; i < 6; i++) {
+            particles.push(createParticle(localX, localY, true));
         }
     }
 
-    function loop() {
-        drawParticles();
-        raf = requestAnimationFrame(loop);
-    }
+    /* ── Story Progress & Scene Navigation ────────── */
+    function updateProgressBars() {
+        if (dismissed) return;
+        var now = performance.now();
+        var elapsed = now - sceneStartTime;
+        var progress = Math.min((elapsed / SCENE_DURATION) * 100, 100);
 
-    /* ── Floating rings (DOM) ────────────────────── */
-    function spawnRings() {
-        var sizes  = [80, 130, 200, 290, 400];
-        var delays = [0,  0.8, 1.6, 2.4, 3.2];
-        var durs   = [6,  8,   7,   9,   10];
+        for (var i = 0; i < TOTAL_SCENES; i++) {
+            var fill = document.getElementById('story-fill-' + i);
+            if (!fill) continue;
+            if (i < currentScene) {
+                fill.style.width = '100%';
+            } else if (i === currentScene) {
+                fill.style.width = progress + '%';
+            } else {
+                fill.style.width = '0%';
+            }
+        }
 
-        for (var i = 0; i < sizes.length; i++) {
-            (function(size, delay, dur) {
-                var ring = document.createElement('div');
-                ring.className = 'intro-ring';
-                ring.style.cssText = [
-                    'width:'  + size + 'px',
-                    'height:' + size + 'px',
-                    'bottom:' + rand(-30, 20) + 'px',
-                    'left:'   + rand(5, 85)   + 'vw',
-                    'animation-duration:'  + dur   + 's',
-                    'animation-delay:'     + delay + 's',
-                ].join(';');
-                overlay.appendChild(ring);
-            })(sizes[i], delays[i], durs[i]);
+        if (progress >= 100) {
+            if (currentScene < TOTAL_SCENES - 1) {
+                goToScene(currentScene + 1);
+            } else {
+                dismiss(); // Auto dismiss at end of last scene
+                return;
+            }
+        } else {
+            progressRaf = requestAnimationFrame(updateProgressBars);
         }
     }
 
-    /* ── Dismiss logic ───────────────────────────── */
+    function goToScene(index) {
+        if (index < 0 || index >= TOTAL_SCENES || dismissed) return;
+        
+        cancelAnimationFrame(progressRaf);
+
+        var prevSceneEl = document.getElementById('story-scene-' + currentScene);
+        if (prevSceneEl) prevSceneEl.classList.remove('active');
+
+        currentScene = index;
+
+        var nextSceneEl = document.getElementById('story-scene-' + currentScene);
+        if (nextSceneEl) nextSceneEl.classList.add('active');
+
+        sceneStartTime = performance.now();
+        playSoundEffect('tap');
+        updateProgressBars();
+    }
+
+    /* ── Touch Swipe Up & Interaction Listeners ───── */
+    function handleTouchStart(e) {
+        if (e.touches && e.touches.length > 0) {
+            touchStartY = e.touches[0].clientY;
+            touchCurrentY = touchStartY;
+            isSwiping = true;
+            addTouchSpark(e.touches[0].clientX, e.touches[0].clientY);
+        }
+    }
+
+    function handleTouchMove(e) {
+        if (!isSwiping || !e.touches || e.touches.length === 0) return;
+        touchCurrentY = e.touches[0].clientY;
+        var deltaY = touchStartY - touchCurrentY;
+
+        if (deltaY > 10) {
+            // Drag visual feedback: slight slide up
+            overlay.style.transform = 'translateY(-' + Math.min(deltaY * 0.4, 80) + 'px)';
+        }
+    }
+
+    function handleTouchEnd() {
+        if (!isSwiping) return;
+        isSwiping = false;
+        var deltaY = touchStartY - touchCurrentY;
+
+        if (deltaY > 60) {
+            // Swipe up threshold reached -> Dismiss!
+            dismiss();
+        } else {
+            // Reset position
+            overlay.style.transform = '';
+        }
+    }
+
+    /* ── Dismiss & Exit Transition ────────────────── */
     function dismiss() {
         if (dismissed) return;
         dismissed = true;
-        if (onKeyDismiss) document.removeEventListener('keydown', onKeyDismiss);
-        cancelAnimationFrame(raf);
+
+        playSoundEffect('dismiss');
+        cancelAnimationFrame(progressRaf);
+        cancelAnimationFrame(canvasRaf);
+
         overlay.classList.add('hide');
-        // dispara as animações de entrada da hero (styles.css: body.intro-done)
         document.body.classList.add('intro-done');
+
         var cleanup = function () {
             overlay.style.display = 'none';
             document.body.style.overflow = '';
         };
-        overlay.addEventListener('animationend', cleanup, { once: true });
-        // segurança: se a animação de saída não disparar (ex.: reduced motion),
-        // garante que o scroll é restaurado na mesma
-        setTimeout(cleanup, 1200);
+
+        overlay.addEventListener('transitionend', cleanup, { once: true });
+        setTimeout(cleanup, 800); // Safety fallback
     }
 
-    /* ── Init ────────────────────────────────────── */
+    /* ── Init & Setup ────────────────────────────── */
     function init() {
-        document.body.style.overflow = 'hidden'; // freeze scroll during intro
+        document.body.style.overflow = 'hidden';
 
-        resize();
-        window.addEventListener('resize', function() {
-            resize();
+        resizeCanvas();
+        window.addEventListener('resize', function () {
+            resizeCanvas();
             initParticles();
         });
 
         initParticles();
-        spawnRings();
-        loop();
+        drawParticles();
 
-        // skip button
+        sceneStartTime = performance.now();
+        updateProgressBars();
+
+        // Control button events
+        var skipDesktopBtn = document.getElementById('intro-skip-desktop');
+        if (skipDesktopBtn) skipDesktopBtn.addEventListener('click', dismiss);
         if (skipBtn) skipBtn.addEventListener('click', dismiss);
+        if (enterBtn) enterBtn.addEventListener('click', dismiss);
+        if (soundToggleBtn) soundToggleBtn.addEventListener('click', toggleAudio);
 
-        // keyboard: Enter or Space
-        onKeyDismiss = function(e) {
-            if (e.key === 'Enter' || e.key === ' ') dismiss();
-        };
-        document.addEventListener('keydown', onKeyDismiss);
+        // Auto dismiss timer for desktop fallback
+        if (window.innerWidth > 768) {
+            setTimeout(dismiss, 3800);
+        }
 
-        // auto-dismiss
-        setTimeout(dismiss, DURATION);
+        // Story tap targets
+        if (tapPrev) tapPrev.addEventListener('click', function () { goToScene(currentScene - 1); });
+        if (tapNext) tapNext.addEventListener('click', function () { goToScene(currentScene + 1); });
+        if (swipeArea) swipeArea.addEventListener('click', dismiss);
+
+        // Touch swipe up listeners
+        overlay.addEventListener('touchstart', handleTouchStart, { passive: true });
+        overlay.addEventListener('touchmove', handleTouchMove, { passive: true });
+        overlay.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+        // Keyboard navigation (Left/Right arrows, Space/Enter to dismiss)
+        document.addEventListener('keydown', function (e) {
+            if (dismissed) return;
+            if (e.key === 'ArrowRight') goToScene(currentScene + 1);
+            if (e.key === 'ArrowLeft') goToScene(currentScene - 1);
+            if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') dismiss();
+        });
     }
 
     if (document.readyState === 'loading') {
@@ -166,3 +341,4 @@
         init();
     }
 })();
+

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -59,33 +59,137 @@
 </head>
 <body>
 
-    <!-- ===== INTRO SPLASH / ANTIGRAVITY ===== -->
-    <div id="intro-overlay" role="dialog" aria-modal="true" aria-label="Tela de entrada Veneza Motos">
-        <div id="intro-bg"></div>
-
-        <!-- Animação mobile: rings pulsantes (oculto no desktop via CSS) -->
-        <div id="intro-mobile-pulse" aria-hidden="true">
-            <div class="mobile-glow"></div>
-            <div class="mobile-ring"></div>
-            <div class="mobile-ring"></div>
-            <div class="mobile-ring"></div>
-        </div>
-
-        <canvas id="intro-canvas"></canvas>
-
-        <div id="intro-content">
-            <div id="intro-brand">
-                <span class="brand-name">Veneza</span>
-                <span class="brand-sub">Motos &amp; Veículos</span>
+    <!-- ===== INTRO SPLASH OVERLAY ===== -->
+    <div id="intro-overlay" role="dialog" aria-modal="true" aria-label="Apresentação Veneza Motos">
+        
+        <!-- DESKTOP INTRO (Exibição Clássica Original para Computadores) -->
+        <div id="intro-desktop-view">
+            <div id="intro-bg"></div>
+            <div id="intro-content">
+                <div id="intro-brand">
+                    <span class="brand-name">Veneza</span>
+                    <span class="brand-sub">Motos &amp; Veículos</span>
+                </div>
+                <div id="intro-line"></div>
+                <p id="intro-tagline">Compra · Venda · Troca · Financiamento</p>
             </div>
-            <div id="intro-line"></div>
-            <p id="intro-tagline">Compra · Venda · Troca · Financiamento</p>
+            <button id="intro-skip-desktop" class="intro-skip-btn" type="button">Pular intro</button>
+            <div id="intro-progress-wrap">
+                <div id="intro-progress"></div>
+            </div>
         </div>
-                
-        <button id="intro-skip" type="button">Pular intro</button>
 
-        <div id="intro-progress-wrap">
-            <div id="intro-progress"></div>
+        <!-- MOBILE 9:16 ANIMATION STORY (Exclusivo para Dispositivos Móveis) -->
+        <div class="intro-916-wrapper" id="intro-mobile-view">
+            <canvas id="intro-canvas"></canvas>
+
+            <!-- Top Header & Story Progress Bars (Mobile 9:16 format) -->
+            <div class="intro-header-bar">
+                <div class="story-progress-container" aria-label="Progresso da apresentação">
+                    <div class="story-progress-bar"><div class="story-progress-fill" id="story-fill-0"></div></div>
+                    <div class="story-progress-bar"><div class="story-progress-fill" id="story-fill-1"></div></div>
+                    <div class="story-progress-bar"><div class="story-progress-fill" id="story-fill-2"></div></div>
+                </div>
+
+                <div class="intro-top-controls">
+                    <div class="intro-brand-mini">
+                        <span class="brand-dot"></span>
+                        <span class="brand-mini-title">Veneza Motos</span>
+                        <span class="brand-verified-badge" title="Concessionária Oficial">✓</span>
+                    </div>
+
+                    <div class="intro-top-actions">
+                        <button id="intro-sound-toggle" type="button" aria-label="Ativar/Desativar som" title="Som de entrada">
+                            <svg class="sound-icon sound-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+                                <line x1="23" y1="9" x2="17" y2="15"/>
+                                <line x1="17" y1="9" x2="23" y2="15"/>
+                            </svg>
+                            <svg class="sound-icon sound-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+                                <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                            </svg>
+                        </button>
+
+                        <button id="intro-skip" class="intro-skip-btn" type="button" aria-label="Pular apresentação">Pular</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Touch Navigation Tap Targets -->
+            <div class="story-nav-tap story-nav-left" id="story-tap-prev" aria-label="Cena anterior"></div>
+            <div class="story-nav-tap story-nav-right" id="story-tap-next" aria-label="Próxima cena"></div>
+
+            <!-- Story Scenes Container -->
+            <div class="intro-scenes-stage">
+                
+                <!-- Scene 0: Welcome & Speed Ignition -->
+                <div class="story-scene active" id="story-scene-0">
+                    <div class="scene-badge">
+                        <span class="badge-icon">⚡</span>
+                        <span class="badge-text">Edição Especial 2026</span>
+                    </div>
+                    <div class="scene-title-wrap">
+                        <h2 class="scene-main-title">Veneza <span class="gradient-text">Motos</span></h2>
+                        <p class="scene-subtitle">E VEÍCULOS</p>
+                        <div class="title-divider"></div>
+                        <p class="scene-desc">A melhor experiência em duas rodas da região.</p>
+                    </div>
+                </div>
+
+                <!-- Scene 1: Catalog Showcase & Benefits Floating Cards -->
+                <div class="story-scene" id="story-scene-1">
+                    <div class="hero-bike-frame">
+                        <div class="bike-light-beam"></div>
+                        <img src="Imagens otimizadas/Imagens motos/422.webp" alt="Honda Bros 160 2026 Veneza Motos" class="hero-bike-img" width="360" height="270">
+                        <div class="bike-shadow"></div>
+                    </div>
+                    <div class="floating-chips-grid">
+                        <div class="chip-item chip-1">
+                            <span class="chip-icon">🔥</span>
+                            <span class="chip-text">Taxas a partir de 0%</span>
+                        </div>
+                        <div class="chip-item chip-2">
+                            <span class="chip-icon">🚀</span>
+                            <span class="chip-text">Aprovação Imediata</span>
+                        </div>
+                        <div class="chip-item chip-3">
+                            <span class="chip-icon">✅</span>
+                            <span class="chip-text">Garantia &amp; Procedência</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scene 2: Call to Action & Swipe Up -->
+                <div class="story-scene" id="story-scene-2">
+                    <div class="cta-scene-content">
+                        <div class="cta-logo-glow">
+                            <span class="cta-badge">VENEZA</span>
+                        </div>
+                        <h3 class="cta-heading">Pronto para acelerar seu sonho?</h3>
+                        <p class="cta-subheading">Confira nossas ofertas exclusivas de hoje!</p>
+
+                        <button id="intro-enter-btn" class="intro-primary-btn" type="button">
+                            <span>Ver Estoque Completo</span>
+                            <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom Swipe Up Gesture Bar -->
+            <div class="intro-swipe-indicator" id="intro-swipe-area">
+                <div class="chevron-stack">
+                    <span class="chevron"></span>
+                    <span class="chevron"></span>
+                    <span class="chevron"></span>
+                </div>
+                <span class="swipe-text">Deslize para cima para entrar</span>
+            </div>
+
         </div>
     </div>
     <!-- ===== /INTRO ===== -->
