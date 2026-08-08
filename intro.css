@@ -494,7 +494,7 @@
         font-weight: 600;
         letter-spacing: 1px;
         color: #93c5fd;
-        margin-bottom: 12px;
+        margin-bottom: 8px;
         box-shadow: 0 0 15px rgba(37, 99, 235, 0.3);
         animation: floatBadge 3s ease-in-out infinite alternate;
         opacity: 0;
@@ -515,6 +515,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: 100%;
     }
 
     .scene-main-title {
@@ -567,13 +568,18 @@
         transition-delay: 0.2s;
     }
 
-    /* Welcome banner photo (storefront), sits right below the brand name */
+    /* Welcome banner photo (storefront), sits right below the brand name.
+       Full-bleed (encosta nas bordas da tela) e com altura própria — maior
+       do que a proporção 20:9 real da foto permitiria mantendo a largura
+       "contida", então a imagem usa object-fit:cover (leve corte lateral,
+       imperceptível, aceitável aqui por ser foto de ambiente/fachada e não
+       a foto do veículo específico). */
     .welcome-banner-frame {
         position: relative;
-        width: min(84vw, 320px);
-        aspect-ratio: 20 / 9;
-        margin: 12px 0;
-        border-radius: 18px;
+        width: calc(100% + 32px);
+        margin: 10px -16px 10px;
+        height: min(25vh, 195px);
+        border-radius: 16px;
         overflow: hidden;
         border: 1px solid rgba(148, 197, 253, 0.28);
         box-shadow: 0 18px 38px -10px rgba(0, 0, 0, 0.55), 0 0 26px rgba(59, 130, 246, 0.18);
@@ -614,7 +620,7 @@
         width: 0;
         height: 3px;
         background: linear-gradient(90deg, transparent, #3b82f6, transparent);
-        margin: 10px 0;
+        margin: 8px 0;
         border-radius: 3px;
         box-shadow: 0 0 10px #3b82f6;
         opacity: 0;
@@ -644,18 +650,20 @@
         transition-delay: 0.46s;
     }
 
-    /* Scene 1 — Catalog Vehicle Showcase (photo shown in FULL, no cropping) */
+    /* Scene 1 — Catalog Vehicle Showcase (photo shown in FULL, no cropping).
+       Sized by WIDTH first (não por altura) para a foto ficar bem mais larga;
+       a altura nasce da proporção real da imagem (9:16). O max-height é só
+       uma rede de segurança para telas muito baixas — na maioria dos
+       aparelhos não chega a ser acionado. */
     .hero-bike-frame {
         position: relative;
-        width: auto;
-        height: min(44vh, 400px);
-        height: min(44dvh, 400px);
+        width: min(74vw, 300px);
         aspect-ratio: 9 / 16;
-        max-width: 82vw;
+        max-height: 60vh;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 14px;
+        margin: 0 auto 10px;
         border-radius: 26px;
         overflow: hidden;
         background: linear-gradient(160deg, rgba(37, 99, 235, 0.22), rgba(8, 15, 35, 0.9));
@@ -735,24 +743,37 @@
         100% { transform: scale(0.85); opacity: 0.4; }
     }
 
-    /* Floating Chips Grid — compact horizontal pills so the photo keeps most of the vertical space */
+    /* Floating Chips Row — uma única linha com rolagem horizontal, altura
+       previsível em qualquer tela, para sobrar o máximo de espaço vertical
+       para a foto (que agora é bem maior). */
     .floating-chips-grid {
         display: flex;
         flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
         gap: 8px;
         width: 100%;
-        max-width: 320px;
+        max-width: 340px;
+        overflow-x: auto;
+        scroll-snap-type: x proximity;
+        -webkit-overflow-scrolling: touch;
+        padding: 2px 3px;
+        scrollbar-width: none;
+    }
+
+    .floating-chips-grid::-webkit-scrollbar {
+        display: none;
     }
 
     .chip-item {
         display: flex;
         align-items: center;
         gap: 7px;
+        flex: 0 0 auto;
+        scroll-snap-align: start;
         background: rgba(15, 23, 42, 0.82);
         border: 1px solid rgba(255, 255, 255, 0.15);
-        padding: 8px 13px;
+        padding: 7px 12px;
         border-radius: 30px;
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);

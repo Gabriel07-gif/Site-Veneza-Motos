@@ -49,6 +49,11 @@ html {
      falhe depois de marcar "has-js-anim", a animação abaixo força
      opacity:1 após 10s, garantindo que o site nunca fique com
      conteúdo permanentemente invisível.
+   - Cascata de 4 grupos (Header/Logo → Textos → Imagem → Botões/
+     Cards), com ~150ms entre grupos. No mobile o deslocamento é
+     bem mais curto e rápido (y:15px / 550ms) que no desktop
+     (y:18px / 900ms), para uma sensação "curtíssima" e orgânica
+     em vez de um slide longo.
    ============================================================ */
 .entrance {
     opacity: 1;
@@ -56,30 +61,46 @@ html {
 }
 
 html.has-js-anim .entrance {
+    --entrance-y: 18px;
+    --entrance-duration: 900ms;
     opacity: 0;
-    transform: translateY(14px);
-    transition: opacity 1s cubic-bezier(0.22, 1, 0.36, 1),
-                transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+    transform: translateY(var(--entrance-y));
+    transition: opacity var(--entrance-duration) cubic-bezier(0.22, 1, 0.36, 1),
+                transform var(--entrance-duration) cubic-bezier(0.22, 1, 0.36, 1);
     animation: entranceFailsafe 0s 10s forwards;
+    will-change: opacity, transform;
 }
 
 html.has-js-anim .entrance.entrance-in {
     opacity: 1;
     transform: none;
+    will-change: auto;
 }
 
 @keyframes entranceFailsafe {
     to { opacity: 1; transform: none; }
 }
 
+/* Grupo 1 — Header/Logo */
 .entrance-delay-1 { transition-delay: 0ms; }
+/* Grupo 2 — Textos (H1 então parágrafo) */
 .entrance-delay-2 { transition-delay: 150ms; }
-.entrance-delay-3 { transition-delay: 300ms; }
-.entrance-delay-4 { transition-delay: 450ms; }
-.entrance-delay-5 { transition-delay: 600ms; }
-.entrance-delay-6 { transition-delay: 750ms; }
-.entrance-delay-7 { transition-delay: 900ms; }
-.entrance-delay-8 { transition-delay: 1050ms; }
+.entrance-delay-3 { transition-delay: 280ms; }
+/* Grupo 3 — Imagem/vitrine da moto */
+.entrance-delay-4 { transition-delay: 430ms; }
+/* Grupo 4 — Botões e cards (micro-stagger interno de ~50ms) */
+.entrance-delay-5 { transition-delay: 580ms; }
+.entrance-delay-6 { transition-delay: 630ms; }
+.entrance-delay-7 { transition-delay: 680ms; }
+.entrance-delay-8 { transition-delay: 730ms; }
+.entrance-delay-9 { transition-delay: 780ms; }
+
+@media (max-width: 768px) {
+    html.has-js-anim .entrance {
+        --entrance-y: 15px;
+        --entrance-duration: 550ms;
+    }
+}
 
 @media (prefers-reduced-motion: reduce) {
     html.has-js-anim .entrance {
@@ -87,6 +108,7 @@ html.has-js-anim .entrance.entrance-in {
         animation: none !important;
         opacity: 1 !important;
         transform: none !important;
+        will-change: auto !important;
     }
 }
 
