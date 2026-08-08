@@ -501,8 +501,10 @@ function initHeroShowcase() {
         });
     });
 
-    showcase.addEventListener("mouseenter", parar);
-    showcase.addEventListener("mouseleave", arrancar);
+    // Pausa apenas por foco de teclado (acessibilidade) e aba oculta — NÃO por
+    // hover do mouse: no desktop o cursor costuma ficar parado sobre o card
+    // enquanto o usuário lê a página, e um pause-on-hover fazia o carrossel
+    // parecer travado. Assim ele gira a cada 5s igual ao mobile.
     showcase.addEventListener("focusin", parar);
     showcase.addEventListener("focusout", arrancar);
     document.addEventListener("visibilitychange", () => {
@@ -511,6 +513,44 @@ function initHeroShowcase() {
     });
 
     arrancar();
+}
+
+/* ===== Revelação premium do hero (staggered entrance no primeiro load) =====
+   Os elementos ".entrance" já nascem visíveis (opacity:1) no CSS por padrão;
+   somente quando <html> ganha a classe "has-js-anim" (ver entrance-init.js,
+   carregado cedo e de forma síncrona no <head> — externo por causa do CSP
+   script-src sem 'unsafe-inline') é que eles ficam ocultos aguardando esta
+   função adicionar ".entrance-in". Se o JS falhar em qualquer etapa, o CSS já
+   garante que tudo volta a ficar visível (ver @keyframes entranceFailsafe em
+   styles.css). */
+function initHeroEntrance() {
+    const entranceEls = document.querySelectorAll(".entrance");
+    if (!entranceEls.length) return;
+
+    let revealed = false;
+    const reveal = () => {
+        if (revealed) return;
+        revealed = true;
+        // Duplo rAF garante que o navegador já pintou o estado oculto antes
+        // de aplicar o estado visível, para a transição realmente rodar.
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                entranceEls.forEach((el) => el.classList.add("entrance-in"));
+            });
+        });
+    };
+
+    const introOverlay = document.getElementById("intro-overlay");
+    if (introOverlay) {
+        // Só revela o hero quando a intro (mobile ou desktop) for dispensada,
+        // para o usuário realmente ver a cascata em vez de ela acontecer
+        // escondida atrás da splash. Timeout de segurança caso o evento
+        // nunca dispare (ex.: erro em intro.js).
+        document.addEventListener("veneza:intro-dismissed", reveal, { once: true });
+        setTimeout(reveal, 9000);
+    } else {
+        reveal();
+    }
 }
 
 function initSimulationFormConstraints() {
@@ -918,6 +958,8 @@ function populateSimulationVehicleOptions() {
 
 document.addEventListener("DOMContentLoaded", () => {
     try {
+        initHeroEntrance();
+
         let savedTheme = null;
         try {
             savedTheme = localStorage.getItem(THEME_KEY);

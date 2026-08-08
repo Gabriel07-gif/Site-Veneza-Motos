@@ -272,6 +272,10 @@
         if (dismissed) return;
         dismissed = true;
 
+        // Avisa o resto da página (revelação do hero) que a intro está saindo,
+        // para a cascata de entrada do hero começar já, por baixo da splash.
+        document.dispatchEvent(new CustomEvent('veneza:intro-dismissed'));
+
         playSoundEffect('dismiss');
         cancelAnimationFrame(progressRaf);
         cancelAnimationFrame(canvasRaf);

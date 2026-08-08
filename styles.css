@@ -37,6 +37,59 @@ html {
     color: var(--primary-dark);
 }
 
+/* ============================================================
+   PREMIUM STAGGERED ENTRANCE ANIMATION (carregamento inicial)
+   - Anima somente opacity/transform (GPU, sem CLS: os elementos já
+     reservam seu espaço no layout, opacity não afeta a caixa).
+   - Progressive enhancement: por padrão ".entrance" fica visível.
+     O estado oculto só existe sob "html.has-js-anim" (classe
+     adicionada por um script síncrono no <head>) — se o JS estiver
+     desativado, essa classe nunca existe e tudo permanece visível.
+   - Falha de segurança em CSS puro: mesmo que o restante do JS
+     falhe depois de marcar "has-js-anim", a animação abaixo força
+     opacity:1 após 10s, garantindo que o site nunca fique com
+     conteúdo permanentemente invisível.
+   ============================================================ */
+.entrance {
+    opacity: 1;
+    transform: none;
+}
+
+html.has-js-anim .entrance {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 1s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+    animation: entranceFailsafe 0s 10s forwards;
+}
+
+html.has-js-anim .entrance.entrance-in {
+    opacity: 1;
+    transform: none;
+}
+
+@keyframes entranceFailsafe {
+    to { opacity: 1; transform: none; }
+}
+
+.entrance-delay-1 { transition-delay: 0ms; }
+.entrance-delay-2 { transition-delay: 150ms; }
+.entrance-delay-3 { transition-delay: 300ms; }
+.entrance-delay-4 { transition-delay: 450ms; }
+.entrance-delay-5 { transition-delay: 600ms; }
+.entrance-delay-6 { transition-delay: 750ms; }
+.entrance-delay-7 { transition-delay: 900ms; }
+.entrance-delay-8 { transition-delay: 1050ms; }
+
+@media (prefers-reduced-motion: reduce) {
+    html.has-js-anim .entrance {
+        transition: none !important;
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}
+
 body {
     margin: 0;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
