@@ -51,9 +51,8 @@ html {
      conteúdo permanentemente invisível.
    - Cascata de 4 grupos (Header/Logo → Textos → Imagem → Botões/
      Cards), com ~150ms entre grupos. No mobile o deslocamento é
-     bem mais curto e rápido (y:15px / 550ms) que no desktop
-     (y:18px / 900ms), para uma sensação "curtíssima" e orgânica
-     em vez de um slide longo.
+     bem mais curto e rápido (y:12px / 480ms) que no desktop
+     (y:20px / 700ms), com escala suave (0.96 → 1) para efeito profissional.
    ============================================================ */
 .entrance {
     opacity: 1;
@@ -61,44 +60,49 @@ html {
 }
 
 html.has-js-anim .entrance {
-    --entrance-y: 18px;
-    --entrance-duration: 900ms;
+    --entrance-y: 20px;
+    --entrance-scale: 0.96;
+    --entrance-duration: 700ms;
+    --entrance-easing: cubic-bezier(0.34, 1.56, 0.64, 1);
     opacity: 0;
-    transform: translateY(var(--entrance-y));
-    transition: opacity var(--entrance-duration) cubic-bezier(0.22, 1, 0.36, 1),
-                transform var(--entrance-duration) cubic-bezier(0.22, 1, 0.36, 1);
+    transform: translateY(var(--entrance-y)) scale(var(--entrance-scale));
+    transition: opacity var(--entrance-duration) var(--entrance-easing),
+                transform var(--entrance-duration) var(--entrance-easing);
     animation: entranceFailsafe 0s 10s forwards;
     will-change: opacity, transform;
+    backface-visibility: hidden;
+    perspective: 1000px;
 }
 
 html.has-js-anim .entrance.entrance-in {
     opacity: 1;
-    transform: none;
+    transform: translateY(0) scale(1);
     will-change: auto;
 }
 
 @keyframes entranceFailsafe {
-    to { opacity: 1; transform: none; }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 /* Grupo 1 — Header/Logo */
 .entrance-delay-1 { transition-delay: 0ms; }
 /* Grupo 2 — Textos (H1 então parágrafo) */
-.entrance-delay-2 { transition-delay: 150ms; }
-.entrance-delay-3 { transition-delay: 280ms; }
+.entrance-delay-2 { transition-delay: 120ms; }
+.entrance-delay-3 { transition-delay: 240ms; }
 /* Grupo 3 — Imagem/vitrine da moto */
-.entrance-delay-4 { transition-delay: 430ms; }
-/* Grupo 4 — Botões e cards (micro-stagger interno de ~50ms) */
-.entrance-delay-5 { transition-delay: 580ms; }
-.entrance-delay-6 { transition-delay: 630ms; }
-.entrance-delay-7 { transition-delay: 680ms; }
-.entrance-delay-8 { transition-delay: 730ms; }
-.entrance-delay-9 { transition-delay: 780ms; }
+.entrance-delay-4 { transition-delay: 360ms; }
+/* Grupo 4 — Botões e cards (micro-stagger interno de ~60ms) */
+.entrance-delay-5 { transition-delay: 480ms; }
+.entrance-delay-6 { transition-delay: 540ms; }
+.entrance-delay-7 { transition-delay: 600ms; }
+.entrance-delay-8 { transition-delay: 660ms; }
+.entrance-delay-9 { transition-delay: 720ms; }
 
 @media (max-width: 768px) {
     html.has-js-anim .entrance {
-        --entrance-y: 15px;
-        --entrance-duration: 550ms;
+        --entrance-y: 12px;
+        --entrance-scale: 0.97;
+        --entrance-duration: 480ms;
     }
 }
 

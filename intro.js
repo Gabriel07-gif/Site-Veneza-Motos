@@ -4,7 +4,13 @@
     /* ── Config ──────────────────────────────────── */
     var SCENE_DURATION  = 2800; // ms per story scene (total ~8.4s max if un-tapped)
     var TOTAL_SCENES    = 3;
-    var PARTICLE_COUNT  = window.innerWidth <= 768 ? 35 : 60;
+    var isMobile = window.innerWidth <= 768;
+    var isLowEndDevice = navigator.hardwareConcurrency <= 2 || navigator.deviceMemory <= 4;
+    
+    // Otimizado para evitar lentidão em mobile: reduz partículas significativamente
+    var PARTICLE_COUNT  = isMobile 
+        ? (isLowEndDevice ? 20 : 30)  // Low-end: 20, Standard mobile: 30
+        : (window.innerWidth <= 1200 ? 45 : 60);  // Desktop: 45-60
 
     /* ── State ───────────────────────────────────── */
     var currentScene    = 0;
@@ -136,15 +142,18 @@
 
         ctx.clearRect(0, 0, width, height);
 
+        // Otimizado: usar cache para gradientes radiais (evita recalcular por partícula)
+        var gradientCache = {};
+
         for (var i = 0; i < particles.length; i++) {
             var p = particles[i];
             p.x += p.speedX;
             p.y -= p.speedY; // Rises upward
 
             if (p.interactive) {
-                p.opacity -= 0.02;
+                p.opacity -= 0.025;  // Um pouco mais rápido no fade
             } else {
-                p.opacity -= 0.0015;
+                p.opacity -= 0.0018;  // Otimizado para melhor visual
             }
 
             if (p.y < -20 || p.opacity <= 0 || p.x < -20 || p.x > width + 20) {
@@ -152,22 +161,32 @@
                 continue;
             }
 
-            // Glow aura
-            var grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 3);
-            grad.addColorStop(0, 'hsla(' + p.hue + ', 90%, 75%, ' + p.opacity + ')');
-            grad.addColorStop(0.5, 'hsla(' + p.hue + ', 80%, 60%, ' + (p.opacity * 0.4) + ')');
-            grad.addColorStop(1, 'hsla(' + p.hue + ', 70%, 50%, 0)');
+            // Glow aura — otimizado com cache
+            var cacheKey = p.hue + ':' + p.size;
+            if (!gradientCache[cacheKey]) {
+                var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size * 3);
+                grad.addColorStop(0, 'hsla(' + p.hue + ', 90%, 75%, 1)');
+                grad.addColorStop(0.5, 'hsla(' + p.hue + ', 80%, 60%, 0.4)');
+                grad.addColorStop(1, 'hsla(' + p.hue + ', 70%, 50%, 0)');
+                gradientCache[cacheKey] = grad;
+            }
 
+            ctx.save();
+            ctx.globalAlpha = p.opacity;
+            ctx.translate(p.x, p.y);
+            
             ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
-            ctx.fillStyle = grad;
+            ctx.arc(0, 0, p.size * 3, 0, Math.PI * 2);
+            ctx.fillStyle = gradientCache[cacheKey];
             ctx.fill();
 
             // Core dot
             ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size * 0.7, 0, Math.PI * 2);
+            ctx.arc(0, 0, p.size * 0.7, 0, Math.PI * 2);
             ctx.fillStyle = 'hsla(' + p.hue + ', 100%, 95%, ' + Math.min(p.opacity + 0.2, 1) + ')';
             ctx.fill();
+            
+            ctx.restore();
         }
 
         canvasRaf = requestAnimationFrame(drawParticles);
