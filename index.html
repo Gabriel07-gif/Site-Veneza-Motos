@@ -63,9 +63,15 @@
     <!-- ===== INTRO SPLASH OVERLAY ===== -->
     <div id="intro-overlay" role="dialog" aria-modal="true" aria-label="Apresentação Veneza Motos">
         
-        <!-- DESKTOP INTRO (foto cinematográfica da Bros com a marca já composta na imagem) -->
+        <!-- DESKTOP INTRO (vídeo cinematográfico da Bros com a marca já composta na imagem).
+             #intro-bg é a foto do mesmo cenário e fica como base/fallback: se o vídeo não
+             puder carregar ou tocar (rede, codec, política de autoplay do navegador), a foto
+             já está lá por baixo e a experiência nunca fica com tela quebrada/em branco. -->
         <div id="intro-desktop-view">
             <div id="intro-bg" role="img" aria-label="Honda Bros 160 em estúdio, iluminação cinematográfica — Veneza Motos e Veículos"></div>
+            <video id="intro-bg-video" autoplay muted playsinline preload="auto" poster="video-intro-poster.webp" aria-hidden="true">
+                <source src="video-intro-veneza.mp4" type="video/mp4">
+            </video>
             <div id="intro-vignette"></div>
             <div id="intro-content">
                 <p id="intro-tagline">Compra · Venda · Troca · Financiamento</p>

@@ -46,23 +46,38 @@
 }
 
 /* ── background photo (Desktop) ──
-   A moto "entra" pela esquerda: a foto começa ampliada e deslocada para a
-   esquerda (mostrando menos da área onde a marca já está impressa) e
-   desliza/assenta na posição natural, revelando a composição completa —
-   moto à esquerda, marca Veneza à direita, já preservadas na própria foto. */
+   Camada de segurança ESTÁTICA (sem animação própria): fica sempre atrás do
+   vídeo, coberta por ele. Só é vista de fato se o vídeo falhar ao carregar.
+   Importante: não anima mais — antes ela e o vídeo faziam fade/blur/escala
+   ao mesmo tempo, e como os dois têm enquadramentos ligeiramente diferentes,
+   a sobreposição semi-transparente criava um efeito de "fantasma" duplicado
+   (moto e logo desalinhadas, borradas, uma por cima da outra). */
 #intro-bg {
     position: absolute;
     inset: 0;
     background: url("Bros-animação-foto-n.webp") center center / cover no-repeat;
-    transform: scale(1.22) translateX(-9%);
-    animation: introBgDriveIn 2.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    filter: brightness(0.9) contrast(1.06) saturate(1.05) blur(10px);
+    filter: contrast(1.06) saturate(1.05);
 }
 
-@keyframes introBgDriveIn {
-    0%   { transform: scale(1.22) translateX(-9%); filter: brightness(0.35) contrast(1.06) saturate(1.05) blur(10px); }
-    55%  { filter: brightness(0.7) contrast(1.06) saturate(1.05) blur(0px); }
-    100% { transform: scale(1.04) translateX(0%); filter: brightness(0.92) contrast(1.06) saturate(1.05) blur(0px); }
+/* ── background video (Desktop) ──
+   Cobre a foto por cima, sem fade — opaco desde o início. O atributo
+   "poster" já mostra o primeiro frame exato do vídeo instantaneamente
+   (carrega tão rápido quanto uma <img>), então quando os dados reais do
+   vídeo chegam a transição é imperceptível: é o mesmo frame. Sem fade
+   sobreposto, não há mais chance de "fantasma" com a foto por baixo. */
+#intro-bg-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #intro-bg-video {
+        display: none;
+    }
 }
 
 /* Vinheta cinematográfica: escurece as bordas para dar profundidade e manter
@@ -119,16 +134,14 @@
     z-index: 10;
 }
 
+/* Largura controlada via JS (intro.js), sincronizada ao progresso real do
+   vídeo (timeupdate) — a transição curta só suaviza entre atualizações. */
 #intro-progress {
     height: 100%;
     width: 0;
     background: linear-gradient(90deg, #1d4ed8, #60a5fa, #93c5fd);
     box-shadow: 0 0 10px #60a5fa;
-    animation: progressFill 3.5s linear 0.3s forwards;
-}
-
-@keyframes progressFill {
-    to { width: 100%; }
+    transition: width 0.15s linear;
 }
 
 /* ── skip button ── */

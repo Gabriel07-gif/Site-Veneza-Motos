@@ -311,6 +311,73 @@
         setTimeout(cleanup, 800); // Safety fallback
     }
 
+    /* ── Desktop background video: progress bar real + dismiss ao terminar ──
+       O <video> usa o atributo "autoplay" nativo do navegador (mecanismo
+       otimizado pelo próprio browser para começar a tocar o quanto antes,
+       sem depender de timing controlado via JS, que se mostrou pouco
+       confiável: sem "autoplay", alguns navegadores adiam o carregamento
+       real do vídeo até o .play() ser chamado, fazendo a pausa parecer
+       travamento indefinido). O poster já é o quadro exato inicial do
+       vídeo, então a entrada em cena é sempre suave, sem salto visual.
+       Múltiplas camadas de segurança: se o vídeo não existir, falhar ao
+       carregar, ou o autoplay for bloqueado pelo navegador, cai de volta no
+       timer fixo antigo (3.8s) — a foto (#intro-bg) já está por baixo do
+       vídeo no HTML/CSS, então a experiência nunca fica quebrada. */
+    function initDesktopVideo() {
+        var video = document.getElementById('intro-bg-video');
+        var progressFill = document.getElementById('intro-progress');
+        var fallbackTimer = null;
+
+        var useFixedFallback = function () {
+            if (fallbackTimer) return; // já agendado
+            fallbackTimer = setTimeout(dismiss, 3800);
+        };
+
+        if (!video) {
+            useFixedFallback();
+            return;
+        }
+
+        var reduceMotion = window.matchMedia &&
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduceMotion) {
+            // O vídeo já fica oculto via CSS para quem pede menos movimento;
+            // nem faz sentido buscar/tocar o arquivo nesse caso.
+            useFixedFallback();
+            return;
+        }
+
+        // Rede de segurança: se o evento 'ended' nunca disparar por algum
+        // motivo, dispensa mesmo assim um pouco depois da duração esperada.
+        var safetyTimer = setTimeout(dismiss, 11000);
+
+        video.addEventListener('timeupdate', function () {
+            if (!progressFill || !video.duration) return;
+            var pct = Math.min((video.currentTime / video.duration) * 100, 100);
+            progressFill.style.width = pct + '%';
+        });
+
+        video.addEventListener('ended', function () {
+            clearTimeout(safetyTimer);
+            dismiss();
+        });
+
+        video.addEventListener('error', function () {
+            clearTimeout(safetyTimer);
+            useFixedFallback();
+        });
+
+        var playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(function () {
+                // Autoplay bloqueado pelo navegador: sem vídeo tocando, não
+                // faz sentido esperar pelo 'ended'; usa o timer fixo.
+                clearTimeout(safetyTimer);
+                useFixedFallback();
+            });
+        }
+    }
+
     /* ── Init & Setup ────────────────────────────── */
     function init() {
         document.body.style.overflow = 'hidden';
@@ -334,9 +401,10 @@
         if (enterBtn) enterBtn.addEventListener('click', dismiss);
         if (soundToggleBtn) soundToggleBtn.addEventListener('click', toggleAudio);
 
-        // Auto dismiss timer for desktop fallback
+        // Desktop: dispensa quando o vídeo de fundo terminar (com timers de
+        // segurança); mobile não tem vídeo, então nem entra nessa lógica.
         if (window.innerWidth > 768) {
-            setTimeout(dismiss, 3800);
+            initDesktopVideo();
         }
 
         // Story tap targets
