@@ -324,11 +324,24 @@
        timer fixo antigo (3.8s) — a foto (#intro-bg) já está por baixo do
        vídeo no HTML/CSS, então a experiência nunca fica quebrada. */
     function initDesktopVideo() {
+        var REVEAL_DELAY = 900; // ms cobertos pela tela de carregamento
         var video = document.getElementById('intro-bg-video');
         var progressFill = document.getElementById('intro-progress');
+        var loadingCover = document.getElementById('intro-loading');
         var fallbackTimer = null;
+        var revealed = false;
+
+        // Some a tela de carregamento — chamada tanto no caminho normal
+        // (depois de REVEAL_DELAY, escondendo o trecho parado do vídeo)
+        // quanto em qualquer caminho de fallback (nada a esconder ali).
+        var revealScene = function () {
+            if (revealed) return;
+            revealed = true;
+            if (loadingCover) loadingCover.classList.add('is-hidden');
+        };
 
         var useFixedFallback = function () {
+            revealScene();
             if (fallbackTimer) return; // já agendado
             fallbackTimer = setTimeout(dismiss, 3800);
         };
@@ -366,6 +379,10 @@
             clearTimeout(safetyTimer);
             useFixedFallback();
         });
+
+        // O vídeo toca por baixo desde já (autoplay nativo, confiável); a
+        // tela de carregamento só esconde o trecho inicial "parado" dele.
+        setTimeout(revealScene, REVEAL_DELAY);
 
         var playPromise = video.play();
         if (playPromise && typeof playPromise.catch === 'function') {

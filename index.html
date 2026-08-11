@@ -80,6 +80,14 @@
             <div id="intro-progress-wrap">
                 <div id="intro-progress"></div>
             </div>
+            <!-- Cobre o início "parado" do próprio vídeo (moto e logo paradas
+                 antes da câmera se mover). O vídeo já está tocando por baixo,
+                 isso só evita mostrar esse trecho estático ao usuário. -->
+            <div id="intro-loading" aria-hidden="true">
+                <div class="intro-loading-dots">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
         </div>
 
         <!-- MOBILE 9:16 ANIMATION STORY (Exclusivo para Dispositivos Móveis) -->
